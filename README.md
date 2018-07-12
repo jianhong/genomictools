@@ -15,6 +15,7 @@ $ docker push jianhong/genomictools:$VERSION
 $ docker tag jianhong/genomictools:$VERSION jianhong/genomictools:latest
 $ docker push jianhong/genomictools:latest
 $ cd ~
+$ docker pull jianhong/genomictools:latest
 $ mkdir tmp4genomictools
 $ docker run -it --rm -v ${PWD}/tmp4genomictools:/volume/data \
 $       jianhong/genomictools:latest bash

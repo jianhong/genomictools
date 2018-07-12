@@ -4,13 +4,14 @@
 # images
 # Based on Ubuntu
 #  $ cd genomicTools.docker
-#  $ VERSION=0.0.1
+#  $ VERSION=0.0.2
 #  $ docker build -t jianhong/genomictools:$VERSION .
 #  $ docker images jianhong/genomictools:$VERSION
 #  $ docker push jianhong/genomictools:$VERSION
 #  $ docker tag jianhong/genomictools:$VERSION jianhong/genomictools:latest
 #  $ docker push jianhong/genomictools:latest
 #  $ cd ~
+#  $ docker pull jianhong/genomictools:latest
 #  $ mkdir tmp4genomictools
 #  $ docker run -it --rm -v ${PWD}/tmp4genomictools:/volume/data \
 #  $       jianhong/genomictools:latest bash
@@ -65,8 +66,9 @@ RUN wget -O TrimGalore.zip https://github.com/FelixKrueger/TrimGalore/archive/0.
   rm TrimGalore.zip && rm -r TrimGalore-0.5.0
 
 ## Install R https://cloud.r-project.org/bin/linux/ubuntu/
-RUN echo "deb https://cloud.r-project.org/bin/linux/ubuntu bionic-cran35/" > tee /etc/apt/sources.list.d/r.list
+RUN echo "deb https://cloud.r-project.org/bin/linux/ubuntu bionic-cran35/" | tee /etc/apt/sources.list.d/r.list
 RUN \
+  apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E084DAB9 && \
   apt-get update --fix-missing && \
   apt-get install -y r-base r-base-dev && \
   apt-get clean && \
