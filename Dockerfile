@@ -4,7 +4,7 @@
 # images
 # Based on Ubuntu
 #  $ cd genomicTools.docker
-#  $ VERSION=0.0.2
+#  $ VERSION=0.0.3
 #  $ docker build -t jianhong/genomictools:$VERSION .
 #  $ docker images jianhong/genomictools:$VERSION
 #  $ docker push jianhong/genomictools:$VERSION
@@ -42,10 +42,15 @@ RUN touch /root/.Xresources
 
 # Update the repository sources list, install wget, unzip, curl, git
 RUN \
-  apt-get install --yes wget bzip2 ca-certificates curl unzip gdebi-core && \
+  apt-get update --fix-missing && \
+  apt-get install --yes wget bzip2 ca-certificates curl unzip gdebi-core git rsync libssl-dev libcurl4-openssl-dev libgsl-dev && \
   apt-get clean && \
   rm -rf /var/lib/apt/lists/*
 
+## add ucsc tools
+RUN rsync -aP rsync://hgdownload.soe.ucsc.edu/genome/admin/exe/linux.x86_64/ /usr/local/bin/
+
+## add conda
 RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda.sh && \
     /bin/bash ~/miniconda.sh -b -p /opt/conda && \
     rm ~/miniconda.sh && \
@@ -60,10 +65,11 @@ RUN /opt/conda/bin/conda update conda
 RUN /opt/conda/bin/conda install -y -c bioconda bowtie2 tophat cufflinks macs2 samtools picard fastqc bedtools cutadapt
 
 ## Install Trim Galore 
-RUN wget -O TrimGalore.zip https://github.com/FelixKrueger/TrimGalore/archive/0.5.0.zip && \
+ENV GALORE_VERSION 0.5.0
+RUN wget -O TrimGalore.zip https://github.com/FelixKrueger/TrimGalore/archive/{GALORE_VERSION}.zip && \
   unzip TrimGalore.zip && \
-  mv TrimGalore-0.5.0/trim_galore /usr/local/bin/ && \
-  rm TrimGalore.zip && rm -r TrimGalore-0.5.0
+  mv TrimGalore-{GALORE_VERSION}/trim_galore /usr/local/bin/ && \
+  rm TrimGalore.zip && rm -r TrimGalore-{GALORE_VERSION}
 
 ## Install R https://cloud.r-project.org/bin/linux/ubuntu/
 RUN echo "deb https://cloud.r-project.org/bin/linux/ubuntu bionic-cran35/" | tee /etc/apt/sources.list.d/r.list
@@ -75,15 +81,14 @@ RUN \
   rm -rf /var/lib/apt/lists/*
 
 ## Install Bioconductor
-ADD install.R /usr/src/biocInstaller/
-RUN /usr/bin/R CMD BATCH /usr/src/biocInstaller/install.R
+RUN echo "source(\"https://bioconductor.org/biocLite.R\")" | R --vanilla
+RUN echo "BiocInstaller::biocLite(c(\"ChIPpeakAnno\", \"trackViewer\", \"motifStack\", \"ATACseqQC\", \"GeneNetworkBuilder\", \"TxDb.Hsapiens.UCSC.hg38.knownGene\", \"org.Hs.eg.db\", \"TxDb.Drerio.UCSC.danRer10.refGene\", \"org.Dr.eg.db\"), suppressUpdates=TRUE, ask=FALSE)" | R --vanilla
 
 ## Install Rstudio
-#RUN apt-get install -y libjpeg-dev && apt-get clean && rm -rf /var/lib/apt/lists/*
 #RUN \
-#  wget https://download1.rstudio.org/rstudio-xenial-1.1.453-amd64.deb && \
-#  gdebi rstudio-xenial-1.1.453-amd64.deb && \
-#  rm rstudio-xenial-1.1.453-amd64.deb
+#  wget https://download2.rstudio.org/rstudio-server-stretch-1.1.453-amd64.deb && \
+#  gdebi rstudio-server-stretch-1.1.453-amd64.deb && \
+#  rm rstudio-server-stretch-1.1.453-amd64.deb
 
 # Add Tini
 ENV TINI_VERSION v0.18.0

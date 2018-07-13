@@ -2,18 +2,11 @@
 docker file for genomic tools
 
 Dockerfile to build bowtie2, tophat2, cufflinks, MACS2, samtools, 
-picard-tools, fastQC, bedtools, cutadapt
+picard-tools, fastQC, bedtools, cutadapt, R, ucsc genome tools
 images
 Based on Ubuntu
 
 <pre>
-$ cd genomicTools.docker
-$ VERSION=0.0.1
-$ docker build -t jianhong/genomictools:$VERSION .
-$ docker images jianhong/genomictools:$VERSION
-$ docker push jianhong/genomictools:$VERSION
-$ docker tag jianhong/genomictools:$VERSION jianhong/genomictools:latest
-$ docker push jianhong/genomictools:latest
 $ cd ~
 $ docker pull jianhong/genomictools:latest
 $ mkdir tmp4genomictools
