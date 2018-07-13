@@ -1,6 +1,6 @@
 #################################################################
 # Dockerfile to build bowtie2, tophat2, cufflinks, MACS2, samtools, 
-# picard-tools, fastQC, bedtools, cutadapt
+# picard-tools, fastQC, bedtools, cutadapt, R, ucsc genome tools
 # images
 # Based on Ubuntu
 #  $ cd genomicTools.docker
@@ -66,10 +66,10 @@ RUN /opt/conda/bin/conda install -y -c bioconda bowtie2 tophat cufflinks macs2 s
 
 ## Install Trim Galore 
 ENV GALORE_VERSION 0.5.0
-RUN wget -O TrimGalore.zip https://github.com/FelixKrueger/TrimGalore/archive/{GALORE_VERSION}.zip && \
+RUN wget -O TrimGalore.zip https://github.com/FelixKrueger/TrimGalore/archive/${GALORE_VERSION}.zip && \
   unzip TrimGalore.zip && \
-  mv TrimGalore-{GALORE_VERSION}/trim_galore /usr/local/bin/ && \
-  rm TrimGalore.zip && rm -r TrimGalore-{GALORE_VERSION}
+  mv TrimGalore-${GALORE_VERSION}/trim_galore /usr/local/bin/ && \
+  rm TrimGalore.zip && rm -r TrimGalore-${GALORE_VERSION}
 
 ## Install R https://cloud.r-project.org/bin/linux/ubuntu/
 RUN echo "deb https://cloud.r-project.org/bin/linux/ubuntu bionic-cran35/" | tee /etc/apt/sources.list.d/r.list
@@ -97,6 +97,7 @@ RUN chmod +x /tini
 ENTRYPOINT ["/tini", "--"]
 
 ## Install featurecounts
+
 RUN wget https://sourceforge.net/projects/subread/files/subread-1.6.2/subread-1.6.2-source.tar.gz && \
    tar -xzf subread-1.6.2-source.tar.gz && cd subread-1.6.2-source/src && \
    make -f Makefile.Linux && mv ../bin/* /usr/local/bin/ && \
