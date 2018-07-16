@@ -4,7 +4,7 @@
 # images
 # Based on Ubuntu
 #  $ cd genomicTools.docker
-#  $ VERSION=0.0.3
+#  $ VERSION=0.0.4
 #  $ docker build -t jianhong/genomictools:$VERSION .
 #  $ docker images jianhong/genomictools:$VERSION
 #  $ docker push jianhong/genomictools:$VERSION
@@ -62,7 +62,7 @@ RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86
 RUN /opt/conda/bin/conda update conda
 
 ## Install bowtie2, tophat2, cufflinks, MACS2, samtools, picard-tools, fastQC, bedtools, cutadapt
-RUN /opt/conda/bin/conda install -y -c bioconda bowtie2 tophat cufflinks macs2 samtools picard fastqc bedtools cutadapt
+RUN /opt/conda/bin/conda install -y -c bioconda bowtie2 tophat cufflinks macs2 samtools picard fastqc bedtools cutadapt deeptools
 
 ## Install Trim Galore 
 ENV GALORE_VERSION 0.5.0
@@ -82,7 +82,7 @@ RUN \
 
 ## Install Bioconductor
 RUN echo "source(\"https://bioconductor.org/biocLite.R\")" | R --vanilla
-RUN echo "BiocInstaller::biocLite(c(\"ChIPpeakAnno\", \"trackViewer\", \"motifStack\", \"ATACseqQC\", \"GeneNetworkBuilder\", \"TxDb.Hsapiens.UCSC.hg38.knownGene\", \"org.Hs.eg.db\", \"TxDb.Drerio.UCSC.danRer10.refGene\", \"org.Dr.eg.db\"), suppressUpdates=TRUE, ask=FALSE)" | R --vanilla
+RUN echo "BiocInstaller::biocLite(c(\"ChIPpeakAnno\", \"trackViewer\", \"motifStack\", \"ATACseqQC\", \"GeneNetworkBuilder\", \"TxDb.Hsapiens.UCSC.hg38.knownGene\", \"org.Hs.eg.db\", \"TxDb.Drerio.UCSC.danRer10.refGene\", \"org.Dr.eg.db\", \"DESeq2\", \"WriteXLS\", \"ggrepel\"), suppressUpdates=TRUE, ask=FALSE)" | R --vanilla
 
 ## Install Rstudio
 #RUN \

@@ -2,7 +2,8 @@
 docker file for genomic tools
 
 Dockerfile to build bowtie2, tophat2, cufflinks, MACS2, samtools, 
-picard-tools, fastQC, bedtools, cutadapt, R, ucsc genome tools
+picard-tools, fastQC, bedtools, cutadapt, deeptools, 
+R, ucsc genome tools
 images
 Based on Ubuntu
 
