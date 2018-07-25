@@ -4,7 +4,7 @@
 # images
 # Based on Ubuntu
 #  $ cd genomicTools.docker
-#  $ VERSION=0.0.4
+#  $ VERSION=0.0.5
 #  $ docker build -t jianhong/genomictools:$VERSION .
 #  $ docker images jianhong/genomictools:$VERSION
 #  $ docker push jianhong/genomictools:$VERSION
@@ -82,7 +82,8 @@ RUN \
 
 ## Install Bioconductor
 RUN echo "source(\"https://bioconductor.org/biocLite.R\")" | R --vanilla
-RUN echo "BiocInstaller::biocLite(c(\"ChIPpeakAnno\", \"trackViewer\", \"motifStack\", \"ATACseqQC\", \"GeneNetworkBuilder\", \"TxDb.Hsapiens.UCSC.hg38.knownGene\", \"org.Hs.eg.db\", \"TxDb.Drerio.UCSC.danRer10.refGene\", \"org.Dr.eg.db\", \"DESeq2\", \"WriteXLS\", \"ggrepel\"), suppressUpdates=TRUE, ask=FALSE)" | R --vanilla
+RUN echo "BiocInstaller::biocLite(c(\"TxDb.Hsapiens.UCSC.hg38.knownGene\", \"org.Hs.eg.db\", \"TxDb.Drerio.UCSC.danRer10.refGene\", \"org.Dr.eg.db\", \"WriteXLS\", \"ggrepel\"), suppressUpdates=TRUE, ask=FALSE)" | R --vanilla
+RUN echo "BiocInstaller::biocLite(c(\"ChIPpeakAnno\", \"trackViewer\", \"motifStack\", \"ATACseqQC\", \"GeneNetworkBuilder\", \"DESeq2\"), suppressUpdates=TRUE, ask=FALSE)" | R --vanilla
 
 ## Install Rstudio
 #RUN \
