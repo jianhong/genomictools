@@ -56,7 +56,7 @@ RUN echo "BiocManager::install(c(\"ChIPpeakAnno\", \"trackViewer\", \"motifStack
 
 
 # Define working directory.
-WORKDIR /volume/rstudio
+WORKDIR /home/rstudio
 COPY --chown=rstudio:rstudio . /home/rstudio/
 
 # Define default command.
