@@ -1,5 +1,5 @@
 #################################################################
-# Dockerfile to build bowtie2, tophat2, cufflinks, MACS2, samtools, 
+# Dockerfile to build bwa, kallisto, cufflinks, MACS2, samtools, 
 # picard-tools, fastQC, bedtools, cutadapt, R, ucsc genome tools
 # images
 # Based on Ubuntu
