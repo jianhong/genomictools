@@ -11,12 +11,8 @@ Based on Ubuntu
 $ cd ~
 $ docker pull jianhong/genomictools:latest
 $ mkdir tmp4genomictools
-$ docker run -it --rm -v ${PWD}/tmp4genomictools:/volume/data \
-$       jianhong/genomictools:latest bash
-$ docker run -it --rm -v ${PWD}/tmp4genomictools:/volume/data \
-$     -p 5901:5901 -e USER=root jianhong/genomictools:latest \
-$     bash -c "service lightdm start && \
-$     vncserver :1 -geometry 1280x800 -depth 24 && \
-$     tail -F /root/.vnc/*.log" &
-$ vnc://`hostname`:5901
+$ docker run -it --rm -e PASSWORD=123456 -p 8787:8787 \
+$       -v ${PWD}/tmp4genomictools:/volume/data \
+$       jianhong/genomictools:latest
+
 </pre>
