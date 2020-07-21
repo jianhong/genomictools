@@ -47,12 +47,12 @@ RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86
 #RUN /opt/conda/bin/conda update -y conda
 
 ## Install bwa, MACS2, samtools, picard-tools, fastQC, bedtools, cutadapt
-RUN /opt/conda/bin/conda install -y -c bioconda bwa macs2 samtools picard fastqc bedtools cutadapt deeptools kallisto trim-galore
+RUN /opt/conda/bin/conda install -y -c bioconda bwa macs2 samtools picard fastqc bedtools cutadapt deeptools kallisto trim-galore salmon
 
 
 ## Install Bioconductor
 RUN echo "BiocManager::install(c(\"TxDb.Hsapiens.UCSC.hg38.knownGene\", \"org.Hs.eg.db\", \"TxDb.Drerio.UCSC.danRer10.refGene\", \"org.Dr.eg.db\", \"WriteXLS\", \"ggrepel\"), suppressUpdates=TRUE, ask=FALSE)" | R --vanilla
-RUN echo "BiocManager::install(c(\"ChIPpeakAnno\", \"trackViewer\", \"motifStack\", \"ATACseqQC\", \"GeneNetworkBuilder\", \"DESeq2\", \"sleuth\"), suppressUpdates=TRUE, ask=FALSE)" | R --vanilla
+RUN echo "BiocManager::install(c(\"ChIPpeakAnno\", \"trackViewer\", \"motifStack\", \"ATACseqQC\", \"GeneNetworkBuilder\", \"DESeq2\", \"sleuth\", \"tximport\"), suppressUpdates=TRUE, ask=FALSE)" | R --vanilla
 
 
 # Define working directory.
