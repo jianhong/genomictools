@@ -59,8 +59,3 @@ RUN echo "BiocManager::install(c(\"ChIPpeakAnno\", \"trackViewer\", \"motifStack
 WORKDIR /home/rstudio
 COPY --chown=rstudio:rstudio . /home/rstudio/
 
-# Define default command.
-CMD ["bash"]
-
-## start rstudio
-ENTRYPOINT rstudio-server start && bash
