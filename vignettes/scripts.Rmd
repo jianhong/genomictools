@@ -26,13 +26,44 @@ docker run -e PASSWORD=123456 -p 8787:8787 \
 ## Run kallisto and Salmon for RNA-seq
 
 login http://localhost:8787 with username "rstudio" and password "123456"
-and run the following code in Terminal panel of rstudio.
+and run the following code Console panel of rstudio.
 ```{r, eval=FALSE}
+system.file("extdata", package = "basicBioinformaticsRNI2020")
+```
+And then run following code in Terminal panel of rstudio.
+Here the path is the output of above code.
 
+```{r, eval=FALSE}
+path="/Library/Frameworks/R.framework/Versions/4.1/Resources/library/basicBioinformaticsRNI2020/extdata"
+cp -r $path ./
+cd extdata/RNAseq
+wget ftp://ftp.ensembl.org/pub/release-100/fasta/danio_rerio/cdna/Danio_rerio.GRCz11.cdna.all.fa.gz
+
+kallisto index -i danRer.GRCz11_transcrits.idx Danio_rerio.GRCz11.cdna.all.fa.gz
+
+salmon index -i danRer.GRCz11_transcrits.salmon.idx -t Danio_rerio.GRCz11.cdna.all.fa.gz
+
+
+mkdir -p kallisto_quant
+mkdir -p salmon_quant
+for rep in 1 2
+do
+for cond in Ablated Uninjured
+do
+kallisto quant -i danRer.GRCz11_transcrits.idx \
+               -o kallisto_quant/$cond.rep$rep \
+               -b 30 -t 2 fastq/$cond.rep$rep.fastq.gz \
+               --single -l 200 -s 50
+salmon quant -i danRer.GRCz11_transcrits.salmon.idx -l A \
+             -r fastq/$cond.rep$rep.fastq.gz \
+             --validateMappings -p 2 \
+             -o salmon_quant/$cond.rep$rep \
+             --numBootstraps 30 --seqBias --gcBias
+done
+done
 ```
 
-
-## Scripts for RNAseq
+## R scripts for RNAseq
 
 ### prepare the transcripts to genes map table
 
