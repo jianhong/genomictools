@@ -17,6 +17,8 @@ knitr::opts_chunk$set(echo = TRUE, eval=FALSE)
 
 2. pipeline: bwa + MACS2 for ChIP-seq
 
+For more information please refer to the [slides](https://github.com/jianhong/genomictools/blob/master/inst/extdata/BasicBioinformaticsRNAseqChIPseqPrimer.pdf)
+
 ## Set-up
 
 All the materials used in this workshop is included in 
@@ -30,14 +32,14 @@ Before we start, please download Docker and install Docker Desktop.
 Once the docker installed on you system, please try to run the following code in a terminal.
 This script will get the latest version of docker container for this workshop.
 
-```{r, eval=FALSE}
+```{bash, eval=FALSE}
 which docker
 docker pull jianhong/genomictools:latest
 ```
 
 Change the docker Memory Resources to >= 5G in the Preferences setting page of Docker.
 And then run the following code in a terminal.
-```{r, eval=FALSE}
+```{bash, eval=FALSE}
 ## set docker memory to > 5G
 ## set docker memory to > 5G ; !important
 cd ~
@@ -53,36 +55,23 @@ All the following steps are running in Rstudio "Terminal" or "Console".
 
 ## Run kallisto and Salmon for RNA-seq
 
-Run the following code Console panel of rstudio. The sample files are packaged 
-in basicBioinformaticsRNI2020 package. 
-
-```{r, eval=FALSE}
-system.file("extdata", package = "basicBioinformaticsRNI2020")
-```
-
-And then run following code in "Terminal" panel of rstudio.
-Here the path is the output of above code. It will copy the sample files into 
-current working directory. 
-
-```{r, eval=FALSE}
-path="/Library/Frameworks/R.framework/Versions/4.1/Resources/library/basicBioinformaticsRNI2020/extdata"
-cp -r $path ./
-```
+The sample files are packaged 
+in basicBioinformaticsRNI2020 package and Docker container. 
 
 Now we will download the zebrafish cDNA files from ENSEMBL in order to build the 
 Kallisto and Salmon transcript index. If you are doing rRNA depletion library,
 please download and merge the cDNA and ncDNA files from ENSEMBL to make the 
 full transcriptome.
 
-```{r, eval=FALSE}
-cd extdata/RNAseq
+```{bash, eval=FALSE}
+cd RNAseq
 wget ftp://ftp.ensembl.org/pub/release-100/fasta/danio_rerio/cdna/Danio_rerio.GRCz11.cdna.all.fa.gz
 ```
 
 Now we can build the transcriptome index. It will take some time and memory. 
 This is the reason why we need to set docker memory to > 5G.
 
-```{r, eval=FALSE}
+```{bash, eval=FALSE}
 kallisto index -i danRer.GRCz11_transcrits.idx Danio_rerio.GRCz11.cdna.all.fa.gz
 
 salmon index -i danRer.GRCz11_transcrits.salmon.idx -t Danio_rerio.GRCz11.cdna.all.fa.gz
@@ -103,7 +92,7 @@ in the bootstrapping. We set the bootstrapping by "-b 30" and "--numBootstraps 3
 
 It will take several minutes for the sample data.
 
-```{r, eval=FALSE}
+```{bash, eval=FALSE}
 mkdir -p kallisto_quant
 mkdir -p salmon_quant
 for rep in 1 2
@@ -135,7 +124,7 @@ We are trying to do gene level DE analysis. We need to aggregate the transcript
 level counts to gene level. We borrowed from the Sleuth documentation by 
 retrieve ENSEMBL transcript id to gene id.
 
-```{r}
+```{r, eval=FALSE}
 library(biomaRt)
 library(dplyr)
 tx2gene <- function(species="hsapiens", ...){
@@ -159,16 +148,20 @@ aggregate to gene level. Downstream are using DESeq2 to do gene level DE analysi
 
 ### run tximport + DESeq2 for Salmon results
 
-```{r}
+```{r, eval=FALSE}
 library(tximport)
 library(DESeq2)
 
 setwd("boostcamp/RNAseq/")
-(salmon_files <- dir("salmon_quant", "sf$", recursive = TRUE, full.names = TRUE))
+(salmon_files <- dir("salmon_quant", "sf$", 
+                     recursive = TRUE, 
+                     full.names = TRUE))
 
-txi.salmon <- tximport(salmon_files, type = "salmon", tx2gene = t2g, ignoreTxVersion=TRUE)
+txi.salmon <- tximport(salmon_files, type = "salmon", 
+                       tx2gene = t2g, ignoreTxVersion=TRUE)
 
-sampleTable <- data.frame(condition = sub(".rep.", "", basename(dirname(salmon_files))))
+sampleTable <- data.frame(condition = sub(".rep.", "", 
+                                          basename(dirname(salmon_files))))
 rownames(sampleTable) <- colnames(txi.salmon$counts)
 dds.salmon <- DESeqDataSetFromTximport(txi.salmon, sampleTable, ~condition)
 dds.salmon <- DESeq(dds.salmon)
@@ -177,14 +170,18 @@ res.salmon[!is.na(res.salmon$padj), ]
 ```
 
 ### run tximport + DESeq2 for kallisto results
-```{r}
-(kallisto_files <- dir("kallisto_quant", "abundance.h5", recursive = TRUE, full.names = TRUE))
+```{r, eval=FALSE}
+(kallisto_files <- dir("kallisto_quant", "abundance.h5", 
+                       recursive = TRUE, full.names = TRUE))
 
-txi.kallisto <- tximport(kallisto_files, type = "kallisto", tx2gene = t2g, ignoreTxVersion=TRUE)
+txi.kallisto <- tximport(kallisto_files, type = "kallisto", 
+                         tx2gene = t2g, ignoreTxVersion=TRUE)
 
-sampleTable <- data.frame(condition = sub(".rep.", "", basename(dirname(kallisto_files))))
+sampleTable <- data.frame(condition = sub(".rep.", "", 
+                                          basename(dirname(kallisto_files))))
 rownames(sampleTable) <- colnames(txi.kallisto$counts)
-dds.kallisto <- DESeqDataSetFromTximport(txi.kallisto, sampleTable, ~condition)
+dds.kallisto <- DESeqDataSetFromTximport(txi.kallisto, 
+                                         sampleTable, ~condition)
 dds.kallisto <- DESeq(dds.kallisto)
 res.kallisto <- results(dds.kallisto)
 res.kallisto[!is.na(res.kallisto$padj), ]
@@ -215,14 +212,41 @@ sleuth_live(so)
 ### prepare index file for bwa
 
 Run following code in Terminal panel of rstudio.
-```{r}
+
+The sample data is located at "/home/rstudio/ChIPseq" folder. It is zebrafish
+H3 ChIP-seq data. 
+
+We will map the reads by BWA (Burrows-Wheeler Aligner). Compare to Bowtie2,
+BWA is a little slower but a bit more accurate and provides information on 
+which alignments are trustworthy. The bwa-mem mode is generally recommended 
+for high-quality queries. It is not limited by sequence reads size as 
+bwa-backtrack and bwa-sw. Aligning reads with bwa-mem, there are two steps,
+build the index and do alignment. BWA indexes the genome with an FM index
+based on the Burrows-Wheeler Transform to keep memory requirements low for
+the alignment process.
+
+```{bash, eval=FALSE}
+## change you working directory
+cd /home/rstudio/ChIPseq
+## download the zebrafish GRCz11 genome from ENSEMBLE
 wget ftp://ftp.ensembl.org/pub/release-100/fasta/danio_rerio/dna/Danio_rerio.GRCz11.dna.primary_assembly.fa.gz
+## build the index
+## -p: prefix for all index files
 bwa index -p GRCz11 Danio_rerio.GRCz11.dna.primary_assembly.fa.gz
 ```
 
 ### Run fastQC, mapping and MACS2
 
-```{r}
+We will the scripts in a bash loop. The samples are from two uninjured 
+and two ablated fish heart tissue. 
+We use fastQC to check the quality of raw reads. The results will saved to 
+"fastqc" folder. You can go through the results by click the index.html file
+in each sub-folder.
+We will perform alignment on the single-end reads. For more information on BWA
+and its functionality please refer to the [user manual](http://bio-bwa.sourceforge.net/bwa.shtml).
+[MACS2](https://github.com/macs3-project/MACS) will be used to call the peaks. 
+
+```{bash, eval=FALSE}
 group=(Ablated Ablated Uninjured Uninjured)
 tag=(Ablated.rep1 Ablated.rep2 Uninjured.rep1 Uninjured.rep2)
 species=danRer11
@@ -240,21 +264,31 @@ fastqc -o fastqc/${group[$i]} -t 2 \
 
 ## mapping by bwa
 mkdir -p sam
-bwa mem -M GRCz11 -t 2 \
+## -t: number of threads
+## -M: mark shorter split hits as secondary, this is optional for Picard compatibility.
+## >: save alignment to a SAM file
+## 2>: save standard error to log file
+bwa mem -M -t 2 GRCz11 \
            fastq/${tag[$i]}.fastq.gz \
            > sam/$prefix.$species.${tag[$i]}.sam \
            2> bwa.$prefix.$species.${tag[$i]}.log.txt
 
+## convert sam file to bam and clean-up
 mkdir -p bam
+## -q: skip alignments with MAPQ samller than 30.
 samtools view -bhS -q 30 sam/$prefix.$species.${tag[$i]}.sam > bam/$prefix.$species.${tag[$i]}.bam
+## sort and index the bam file for quick access.
 samtools sort bam/$prefix.$species.${tag[$i]}.bam -o bam/$prefix.$species.${tag[$i]}.srt.bam
 samtools index bam/$prefix.$species.${tag[$i]}.srt.bam
+## remove un-sorted bam file.
 rm bam/$prefix.$species.${tag[$i]}.bam
 
+## use deeptools::bamCoverage to generate bigwig files
+## the bw file can be viewed in IGV
 mkdir -p bw
 bamCoverage -b bam/$prefix.$species.${tag[$i]}.srt.bam -o bw/$prefix.$species.${tag[$i]}.bw --normalizeUsing CPM
 
-
+## we remove the duplicated by picard::MarkDuplicates. 
 mkdir -p bam/picard
 picard MarkDuplicates \
        INPUT=bam/$prefix.$species.${tag[$i]}.srt.bam \
@@ -264,11 +298,15 @@ picard MarkDuplicates \
 samtools index bam/$prefix.$species.${tag[$i]}.srt.markDup.bam
 
 
-## call peaks
+## call peaks by macs2
 mkdir -p macs2/${tag[$i]}
-
+## -g: mappable genome size
+## -q: use minimum FDR 0.05 cutoff to call significant regions.
+## -B: ask MACS2 to output bedGraph files for experiment.
+## --nomodel --extsize 150: the subset data is not big enough (<1000 peak) for
+## macs2 to generate a model. We manually feed one.
 macs2 callpeak -t bam/${prefix}.$species.${tag[$i]}.srt.markDup.bam \
-               -f BAM -g 1.2e9 -n ${prefix}.$species.${tag[$i]} \
+               -f BAM -g 1.4e9 -n ${prefix}.$species.${tag[$i]} \
                --outdir macs2/${tag[$i]} -q 0.05 \
                -B --nomodel --extsize 150
 
