@@ -131,6 +131,10 @@ The following code should be run in Console of Rstudio.
 
 ### prepare the transcripts to genes map table
 
+We are trying to do gene level DE analysis. We need to aggregate the transcript
+level counts to gene level. We borrowed from the Sleuth documentation by 
+retrieve ENSEMBL transcript id to gene id.
+
 ```{r}
 library(biomaRt)
 library(dplyr)
@@ -149,7 +153,12 @@ t2g <- tx2gene("drerio")
 head(t2g, n=3)
 ```
 
+
+The following codes are using tximport to import the transcripts counts and
+aggregate to gene level. Downstream are using DESeq2 to do gene level DE analysis.
+
 ### run tximport + DESeq2 for Salmon results
+
 ```{r}
 library(tximport)
 library(DESeq2)
@@ -181,7 +190,10 @@ res.kallisto <- results(dds.kallisto)
 res.kallisto[!is.na(res.kallisto$padj), ]
 ```
 
+
 ### run Sleuth
+
+The following code is showing how to use sleuth to do DE analysis.
 ```{r}
 #BiocManager::install("pachterlab/sleuth")
 library(sleuth)
@@ -192,6 +204,7 @@ s2c <- data.frame(path=dir("kallisto_quant", full.names = TRUE),
 s2c
 so <- sleuth_prep(s2c, ~-1+condition, target_mapping = t2g)
 so <- sleuth_fit(so)
+## which_beta must be in the colname of design table.
 so <- sleuth_wt(so, which_beta = "conditionAblated")
 sleuth_live(so)
 ```
@@ -231,14 +244,6 @@ bwa mem -M GRCz11 -t 2 \
            fastq/${tag[$i]}.fastq.gz \
            > sam/$prefix.$species.${tag[$i]}.sam \
            2> bwa.$prefix.$species.${tag[$i]}.log.txt
-
-#bowtie2 -x ../igenome/UCSC/$species/Sequence/Bowtie2Index/genome \
-#        -U fastq/${tag[$i]}.fastq.gz \
-#        -S sam/$prefix.$species.${tag[$i]}.sam \
-#        --very-sensitive \
-#        -p 2 \
-#        > sam/$prefix.$species.${tag[$i]}.log
-
 
 mkdir -p bam
 samtools view -bhS -q 30 sam/$prefix.$species.${tag[$i]}.sam > bam/$prefix.$species.${tag[$i]}.bam
