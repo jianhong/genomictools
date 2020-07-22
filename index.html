@@ -84,9 +84,25 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
-<div id="genomictools" class="section level1">
+<div id="rni2020-basic-bioinformatics" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
-<a href="#genomictools" class="anchor"></a>genomictools</h1></div>
+<a href="#rni2020-basic-bioinformatics" class="anchor"></a>RNI2020 basic bioinformatics</h1></div>
+<p><img src="https://github.com/jianhong/genomictools/workflows/.github/workflows/push_docker.yaml/badge.svg" alt=".github/workflows/push_docker.yaml"></p>
+<p><a href="https://jianhong.github.io/genomictools/">github page</a> | <a href="https://github.com/jianhong/genomictools">source code</a></p>
+<p>This package will create the docker file for the tools used for RNA-seq and ChIP-seq analysis, the sample code and files to run the pipeline, and the slides for the course.</p>
+<div id="pre-requisites" class="section level2">
+<h2 class="hasAnchor">
+<a href="#pre-requisites" class="anchor"></a>Pre-requisites</h2>
+<ul>
+<li>Basic knowledge of next generation sequence</li>
+<li>Basic knowledge of R</li>
+<li>Basic knowledge of Docker</li>
+<li>A computer with internet connection</li>
+</ul>
+</div>
+<div id="genomictools" class="section level2">
+<h2 class="hasAnchor">
+<a href="#genomictools" class="anchor"></a>genomictools</h2>
 <p>docker file for genomic tools</p>
 <p>Dockerfile to build bwa, bowtie2, kallisto, cufflinks, MACS2, samtools, picard-tools, fastQC, bedtools, cutadapt, deeptools, R, ucsc genome tools images Based on Ubuntu</p>
 <pre>
@@ -98,6 +114,38 @@ $       -v ${PWD}/tmp4genomictools:/volume/data \
 $       jianhong/genomictools:latest
 
 </pre>
+</div>
+<div id="pipeline-for-rna-seq" class="section level2">
+<h2 class="hasAnchor">
+<a href="#pipeline-for-rna-seq" class="anchor"></a>pipeline for RNA-seq</h2>
+<p>The sample RNA-seq data will be analyzed with <a href="https://pachterlab.github.io/kallisto/about">kallisto</a></p>
+<ul>
+<li>
+<a href="https://pachterlab.github.io/sleuth/about">sleuth</a>, <a href="https://pachterlab.github.io/kallisto/about">kallisto</a> or <a href="https://combine-lab.github.io/salmon/">Salmon</a>
+</li>
+<li>
+<a href="https://bioconductor.org/packages/tximport/">tximport</a> + <a href="https://bioconductor.org/packages/DESeq2">DESeq2</a>.</li>
+</ul>
+</div>
+<div id="pipeline-for-chip-seq" class="section level2">
+<h2 class="hasAnchor">
+<a href="#pipeline-for-chip-seq" class="anchor"></a>pipeline for ChIP-seq</h2>
+<p>The ChIP-seq data will be analyzed with <a href="http://bio-bwa.sourceforge.net/">bwa</a> + <a href="https://github.com/macs3-project/MACS">MACS2</a>.</p>
+</div>
+<div id="learning-goals" class="section level2">
+<h2 class="hasAnchor">
+<a href="#learning-goals" class="anchor"></a>Learning goals</h2>
+<ol>
+<li><p>Gain the basic knowledge of typical workflows for RNA-seq and ChIP-seq</p></li>
+<li><p>Learn how to understand the results of RNA-seq and ChIP-seq data</p></li>
+<li><p>Become aware the experiemental approaches and the limitation of the pipeline.</p></li>
+</ol>
+</div>
+<div id="references" class="section level2">
+<h2 class="hasAnchor">
+<a href="#references" class="anchor"></a>references:</h2>
+<p><a href="https://github.com/haibol2016/BioinformaticsTrainingWorkshop">BioinformaticsTraningWorkshop</a> <a href="https://github.com/hbctraining/Intro-to-ChIPseq">Introduction to ChIP-seq using high performance computing</a> <a href="https://www.rna-seqblog.com/webinar-new-and-improved-rna-seq-workflows/">Webinar: New and Improved RNA-Seq Workflows</a> <a href="https://bioconductor.org/help/course-materials/2017/CSAMA/lectures/2-tuesday/lec07-alignmentfree-rnaseq.pdf">Alignment-free RNA-seq workflow</a> <a href="https://scilifelab.github.io/courses/rnaseq/labs/kallisto">Kallisto and Sleuth</a> <a href="https://biohpc.cornell.edu/lab/doc/Chip-seq_workshop_lecture1.pdf">cornell computational pipeline for ChIP-seq Data Analysis</a></p>
+</div>
 </div>
   </div>
 
