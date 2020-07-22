@@ -56,9 +56,14 @@ The ChIP-seq data will be analyzed with [bwa](http://bio-bwa.sourceforge.net/) +
 
 ## references:
 
-[BioinformaticsTraningWorkshop](https://github.com/haibol2016/BioinformaticsTrainingWorkshop)
-[Introduction to ChIP-seq using high performance computing](https://github.com/hbctraining/Intro-to-ChIPseq)
-[Webinar: New and Improved RNA-Seq Workflows](https://www.rna-seqblog.com/webinar-new-and-improved-rna-seq-workflows/)
-[Alignment-free RNA-seq workflow](https://bioconductor.org/help/course-materials/2017/CSAMA/lectures/2-tuesday/lec07-alignmentfree-rnaseq.pdf)
-[Kallisto and Sleuth](https://scilifelab.github.io/courses/rnaseq/labs/kallisto)
-[cornell computational pipeline for ChIP-seq Data Analysis](https://biohpc.cornell.edu/lab/doc/Chip-seq_workshop_lecture1.pdf)
+* [BioinformaticsTraningWorkshop](https://github.com/haibol2016/BioinformaticsTrainingWorkshop)
+
+* [Introduction to ChIP-seq using high performance computing](https://github.com/hbctraining/Intro-to-ChIPseq)
+
+* [Webinar: New and Improved RNA-Seq Workflows](https://www.rna-seqblog.com/webinar-new-and-improved-rna-seq-workflows/)
+
+* [Alignment-free RNA-seq workflow](https://bioconductor.org/help/course-materials/2017/CSAMA/lectures/2-tuesday/lec07-alignmentfree-rnaseq.pdf)
+
+* [Kallisto and Sleuth](https://scilifelab.github.io/courses/rnaseq/labs/kallisto)
+
+* [cornell computational pipeline for ChIP-seq Data Analysis](https://biohpc.cornell.edu/lab/doc/Chip-seq_workshop_lecture1.pdf)

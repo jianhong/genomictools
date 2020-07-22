@@ -1,6 +1,6 @@
 Package: basicBioinformaticsRNI2020
 Type: Package
-Version: 0.0.4
+Version: 0.1.0
 Title: RNI2020 basic bioinformatics
 Authors@R: person(given="Jianhong", family="Ou", email="jianhong.ou@duke.edu", 
         role=c("aut", "cre"), comment=c(ORCID="0000-0002-8652-2488"))
