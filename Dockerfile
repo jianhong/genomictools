@@ -53,7 +53,9 @@ RUN /opt/conda/bin/conda install -y -c bioconda bowtie2 bwa macs2 samtools picar
 RUN echo "BiocManager::install(c(\"TxDb.Hsapiens.UCSC.hg38.knownGene\", \"org.Hs.eg.db\", \"TxDb.Drerio.UCSC.danRer10.refGene\", \"org.Dr.eg.db\", \"WriteXLS\", \"ggrepel\"), suppressUpdates=TRUE, ask=FALSE)" | R --vanilla
 RUN echo "BiocManager::install(c(\"ChIPpeakAnno\", \"trackViewer\", \"motifStack\", \"ATACseqQC\", \"GeneNetworkBuilder\", \"DESeq2\", \"tximport\", \"pachterlab/sleuth\"), suppressUpdates=TRUE, ask=FALSE)" | R --vanilla
 RUN Rscript -e "BiocManager::install('jianhong/genomictools', update = TRUE, ask=FALSE)"
-
+RUN path="/usr/local/lib/R/site-library/basicBioinformaticsRNI2020/extdata" && \
+    cp -r $path/RNAseq /home/rstudio/ && \
+    cp -r $path/ChIPseq /home/rstudio/
 
 # Define working directory.
 WORKDIR /home/rstudio
