@@ -1,5 +1,5 @@
 ---
-title: "scripts"
+title: "Scripts for RNA-seq and ChIP-seq analysis primer"
 author: Jianhong Ou
 output: rmarkdown::html_vignette
 vignette: >
@@ -11,44 +11,99 @@ vignette: >
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, eval=FALSE)
 ```
+## Learning Objectives:
 
-## Prepare docker
+1. pipeline: kallisto and Salmon + tximport + DESeq2 for RNA-seq
 
-Run the following code in a terminal.
+2. pipeline: bwa + MACS2 for ChIP-seq
+
+## Set-up
+
+All the materials used in this workshop is included in 
+[Docker](https://www.docker.com/) file: 
+[jianhong/genomictools](https://hub.docker.com/repository/docker/jianhong/genomictools)
+
+Before we start, please download Docker and install Docker Desktop.
+
+### Install docker
+
+Once the docker installed on you system, please try to run the following code in a terminal.
+This script will get the latest version of docker container for this workshop.
 
 ```{r, eval=FALSE}
 which docker
 docker pull jianhong/genomictools:latest
-cd ~
-mkdir tmp4genomictools
+```
+
+Change the docker Memory Resources to >= 5G in the Preferences setting page of Docker.
+And then run the following code in a terminal.
+```{r, eval=FALSE}
 ## set docker memory to > 5G
 ## set docker memory to > 5G ; !important
+cd ~
+mkdir tmp4genomictools
 docker run -e PASSWORD=123456 -p 8787:8787 \
   -v ${PWD}/tmp4genomictools:/home/rstudio \
   jianhong/genomictools:latest
 ```
 
+"docker run" will open port 8787 on your system. Now you can login rstudio in 
+the container at http://localhost:8787 with username "rstudio" and password "123456".
+All the following steps are running in Rstudio "Terminal" or "Console".
+
 ## Run kallisto and Salmon for RNA-seq
 
-login http://localhost:8787 with username "rstudio" and password "123456"
-and run the following code Console panel of rstudio.
+Run the following code Console panel of rstudio. The sample files are packaged 
+in basicBioinformaticsRNI2020 package. 
+
 ```{r, eval=FALSE}
 system.file("extdata", package = "basicBioinformaticsRNI2020")
 ```
-And then run following code in Terminal panel of rstudio.
-Here the path is the output of above code.
+
+And then run following code in "Terminal" panel of rstudio.
+Here the path is the output of above code. It will copy the sample files into 
+current working directory. 
 
 ```{r, eval=FALSE}
 path="/Library/Frameworks/R.framework/Versions/4.1/Resources/library/basicBioinformaticsRNI2020/extdata"
 cp -r $path ./
+```
+
+Now we will download the zebrafish cDNA files from ENSEMBL in order to build the 
+Kallisto and Salmon transcript index. If you are doing rRNA depletion library,
+please download and merge the cDNA and ncDNA files from ENSEMBL to make the 
+full transcriptome.
+
+```{r, eval=FALSE}
 cd extdata/RNAseq
 wget ftp://ftp.ensembl.org/pub/release-100/fasta/danio_rerio/cdna/Danio_rerio.GRCz11.cdna.all.fa.gz
+```
 
+Now we can build the transcriptome index. It will take some time and memory. 
+This is the reason why we need to set docker memory to > 5G.
+
+```{r, eval=FALSE}
 kallisto index -i danRer.GRCz11_transcrits.idx Danio_rerio.GRCz11.cdna.all.fa.gz
 
 salmon index -i danRer.GRCz11_transcrits.salmon.idx -t Danio_rerio.GRCz11.cdna.all.fa.gz
+```
 
+It's time for quantifying the FASTQ files against our Kallisto index and 
+Salmon index. We run both of them for comparison. For real data, you can
+select one of them.
 
+Because our FASTQ files are single end reads, we need to set --single for 
+kallisto. And we also need to give the fragment length and standard error 
+of the length for kallisto.
+
+For Salmon, now we can set library type to "A". 
+
+In this example, we put "-t 2" and "-p 2" so we can use up to two processors 
+in the bootstrapping. We set the bootstrapping by "-b 30" and "--numBootstraps 30".
+
+It will take several minutes for the sample data.
+
+```{r, eval=FALSE}
 mkdir -p kallisto_quant
 mkdir -p salmon_quant
 for rep in 1 2
@@ -67,6 +122,7 @@ salmon quant -i danRer.GRCz11_transcrits.salmon.idx -l A \
 done
 done
 ```
+
 
 ## R scripts for RNAseq
 
@@ -136,6 +192,84 @@ so <- sleuth_fit(so)
 so <- sleuth_wt(so, which_beta = "conditionAblated")
 sleuth_live(so)
 ```
+
+
+## scripts for ChIPseq
+
+### prepare index file for bwa
+
+Run following code in Terminal panel of rstudio.
+```{r}
+wget ftp://ftp.ensembl.org/pub/release-100/fasta/danio_rerio/dna/Danio_rerio.GRCz11.dna.primary_assembly.fa.gz
+bwa index -p GRCz11 Danio_rerio.GRCz11.dna.primary_assembly.fa.gz
+```
+
+### Run fastQC, mapping and MACS2
+
+```{r}
+group=(Ablated Ablated Uninjured Uninjured)
+tag=(Ablated.rep1 Ablated.rep2 Uninjured.rep1 Uninjured.rep2)
+species=danRer11
+prefix=bwa
+
+for i in {0..3}
+do
+## fastQC
+mkdir -p fastqc/${group[$i]}
+fastqc -o fastqc/${group[$i]} -t 2 \
+       fastq/${tag[$i]}.fastq.gz
+## trim adapter, need trim_galore be installed, here we do not do this step
+# mkdir -p fastq.trimmed
+# trim_galore -q 15 --fastqc -o fastq.trimmed/${group[$i]} fastq/${tag[$i]}.fastq.gz
+
+## mapping by bwa
+mkdir -p sam
+bwa mem -M GRCz11 -t 2 \
+           fastq/${tag[$i]}.fastq.gz \
+           > sam/$prefix.$species.${tag[$i]}.sam \
+           2> bwa.$prefix.$species.${tag[$i]}.log.txt
+
+#bowtie2 -x ../igenome/UCSC/$species/Sequence/Bowtie2Index/genome \
+#        -U fastq/${tag[$i]}.fastq.gz \
+#        -S sam/$prefix.$species.${tag[$i]}.sam \
+#        --very-sensitive \
+#        -p 2 \
+#        > sam/$prefix.$species.${tag[$i]}.log
+
+
+mkdir -p bam
+samtools view -bhS -q 30 sam/$prefix.$species.${tag[$i]}.sam > bam/$prefix.$species.${tag[$i]}.bam
+samtools sort bam/$prefix.$species.${tag[$i]}.bam -o bam/$prefix.$species.${tag[$i]}.srt.bam
+samtools index bam/$prefix.$species.${tag[$i]}.srt.bam
+rm bam/$prefix.$species.${tag[$i]}.bam
+
+mkdir -p bw
+bamCoverage -b bam/$prefix.$species.${tag[$i]}.srt.bam -o bw/$prefix.$species.${tag[$i]}.bw --normalizeUsing CPM
+
+
+mkdir -p bam/picard
+picard MarkDuplicates \
+       INPUT=bam/$prefix.$species.${tag[$i]}.srt.bam \
+       OUTPUT=bam/$prefix.$species.${tag[$i]}.srt.markDup.bam \
+       METRICS_FILE=bam/picard/$prefix.$species.${tag[$i]}.srt.fil.picard_info.txt \
+       REMOVE_DUPLICATES=true ASSUME_SORTED=true VALIDATION_STRINGENCY=LENIENT
+samtools index bam/$prefix.$species.${tag[$i]}.srt.markDup.bam
+
+
+## call peaks
+mkdir -p macs2/${tag[$i]}
+
+macs2 callpeak -t bam/${prefix}.$species.${tag[$i]}.srt.markDup.bam \
+               -f BAM -g 1.2e9 -n ${prefix}.$species.${tag[$i]} \
+               --outdir macs2/${tag[$i]} -q 0.05 \
+               -B --nomodel --extsize 150
+
+done
+```
+
+
+
+
 
 
 
