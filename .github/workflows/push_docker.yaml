@@ -9,7 +9,7 @@ jobs:
     container: bioconductor/bioconductor_docker:RELEASE_3_11
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v1
       
       
       - name: Build and push Docker images
