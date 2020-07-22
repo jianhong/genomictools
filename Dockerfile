@@ -47,8 +47,7 @@ RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86
 #RUN /opt/conda/bin/conda update -y conda
 
 ## Install bowtie2, bwa, MACS2, samtools, picard-tools, fastQC, bedtools, cutadapt
-RUN /opt/conda/bin/conda install -y -c bioconda bowtie2 bwa macs2 samtools picard fastqc bedtools cutadapt deeptools kallisto trim-galore salmon
-
+RUN /opt/conda/bin/conda install -y -c bioconda bowtie2 bwa macs2 samtools picard fastqc bedtools cutadapt deeptools kallisto trim-galore salmon openssl=1.0
 
 ## Install Bioconductor
 RUN echo "BiocManager::install(c(\"TxDb.Hsapiens.UCSC.hg38.knownGene\", \"org.Hs.eg.db\", \"TxDb.Drerio.UCSC.danRer10.refGene\", \"org.Dr.eg.db\", \"WriteXLS\", \"ggrepel\"), suppressUpdates=TRUE, ask=FALSE)" | R --vanilla

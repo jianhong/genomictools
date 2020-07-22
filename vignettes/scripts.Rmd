@@ -126,6 +126,9 @@ done
 
 ## R scripts for RNAseq
 
+Here we give an example workflow for a differential expression (DE) analysis.
+The following code should be run in Console of Rstudio.
+
 ### prepare the transcripts to genes map table
 
 ```{r}
