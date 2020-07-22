@@ -1,7 +1,7 @@
 # genomictools
 docker file for genomic tools
 
-Dockerfile to build bowtie2, tophat2, cufflinks, MACS2, samtools, 
+Dockerfile to build bwa, bowtie2, kallisto, cufflinks, MACS2, samtools, 
 picard-tools, fastQC, bedtools, cutadapt, deeptools, 
 R, ucsc genome tools
 images

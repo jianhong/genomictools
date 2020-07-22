@@ -1,0 +1,106 @@
+---
+title: "scripts"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, eval=FALSE)
+```
+
+## Prepare docker
+
+Run the following code in a terminal.
+
+```{r, eval=FALSE}
+which docker
+docker pull jianhong/genomictools:latest
+cd ~
+mkdir tmp4genomictools
+## set docker memory to > 5G
+## set docker memory to > 5G ; !important
+docker run -e PASSWORD=123456 -p 8787:8787 \
+  -v ${PWD}/tmp4genomictools:/home/rstudio \
+  jianhong/genomictools:latest
+```
+
+## Run kallisto and Salmon for RNA-seq
+
+login http://localhost:8787 with username "rstudio" and password "123456"
+and run the following code in Terminal panel of rstudio.
+```{r, eval=FALSE}
+
+```
+
+
+## Scripts for RNAseq
+
+### prepare the transcripts to genes map table
+
+```{r}
+library(biomaRt)
+library(dplyr)
+tx2gene <- function(species="hsapiens", ...){
+  mart <- biomaRt::useMart(biomart = "ensembl", 
+                           dataset = paste0(species, "_gene_ensembl"), ...)
+  t2g <- biomaRt::getBM(attributes = c("ensembl_transcript_id", 
+                                       "ensembl_gene_id",
+                                       "external_gene_name"), mart = mart)
+  t2g <- dplyr::rename(t2g, target_id = ensembl_transcript_id,
+                       ens_gene = ensembl_gene_id, ext_gene = external_gene_name)
+  return(t2g)
+}
+
+t2g <- tx2gene("drerio")
+head(t2g, n=3)
+```
+
+### run tximport + DESeq2 for Salmon results
+```{r}
+library(tximport)
+library(DESeq2)
+
+setwd("boostcamp/RNAseq/")
+(salmon_files <- dir("salmon_quant", "sf$", recursive = TRUE, full.names = TRUE))
+
+txi.salmon <- tximport(salmon_files, type = "salmon", tx2gene = t2g, ignoreTxVersion=TRUE)
+
+sampleTable <- data.frame(condition = sub(".rep.", "", basename(dirname(salmon_files))))
+rownames(sampleTable) <- colnames(txi.salmon$counts)
+dds.salmon <- DESeqDataSetFromTximport(txi.salmon, sampleTable, ~condition)
+dds.salmon <- DESeq(dds.salmon)
+res.salmon <- results(dds.salmon)
+res.salmon[!is.na(res.salmon$padj), ]
+```
+
+### run tximport + DESeq2 for kallisto results
+```{r}
+(kallisto_files <- dir("kallisto_quant", "abundance.h5", recursive = TRUE, full.names = TRUE))
+
+txi.kallisto <- tximport(kallisto_files, type = "kallisto", tx2gene = t2g, ignoreTxVersion=TRUE)
+
+sampleTable <- data.frame(condition = sub(".rep.", "", basename(dirname(kallisto_files))))
+rownames(sampleTable) <- colnames(txi.kallisto$counts)
+dds.kallisto <- DESeqDataSetFromTximport(txi.kallisto, sampleTable, ~condition)
+dds.kallisto <- DESeq(dds.kallisto)
+res.kallisto <- results(dds.kallisto)
+res.kallisto[!is.na(res.kallisto$padj), ]
+```
+
+### run Sleuth
+```{r}
+#BiocManager::install("pachterlab/sleuth")
+library(sleuth)
+samples <- dir("kallisto_quant")
+s2c <- data.frame(path=dir("kallisto_quant", full.names = TRUE), 
+                  sample=samples, 
+                  condition=sub(".rep.", "", samples))
+s2c
+so <- sleuth_prep(s2c, ~-1+condition, target_mapping = t2g)
+so <- sleuth_fit(so)
+so <- sleuth_wt(so, which_beta = "conditionAblated")
+sleuth_live(so)
+```
+
+
+
+
