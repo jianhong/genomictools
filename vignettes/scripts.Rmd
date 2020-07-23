@@ -152,7 +152,7 @@ aggregate to gene level. Downstream are using DESeq2 to do gene level DE analysi
 library(tximport)
 library(DESeq2)
 
-setwd("boostcamp/RNAseq/")
+setwd("RNAseq/")
 (salmon_files <- dir("salmon_quant", "sf$", 
                      recursive = TRUE, 
                      full.names = TRUE))
