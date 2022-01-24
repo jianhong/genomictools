@@ -28,7 +28,7 @@ Based on Ubuntu
 $ cd ~
 $ docker pull jianhong/genomictools:latest
 $ mkdir tmp4genomictools
-$ docker run -e PASSWORD=123456 -p 8787:8787 \
+$ docker run --user rstudio -e PASSWORD=123456 -p 8787:8787 \
 $       -v ${PWD}/tmp4genomictools:/home/rstudio \
 $       jianhong/genomictools:latest
 
