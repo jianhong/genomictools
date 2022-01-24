@@ -1,13 +1,13 @@
-Package: basicBioinformaticsRNI2020
+Package: basicBioinformaticsRNI2022
 Type: Package
-Version: 1.0.1
-Title: RNI2020 basic bioinformatics
+Version: 1.0.2
+Title: RNI2022 basic bioinformatics
 Authors@R: person(given="Jianhong", family="Ou", email="jianhong.ou@duke.edu", 
         role=c("aut", "cre"), comment=c(ORCID="0000-0002-8652-2488"))
 Maintainer: Jianhong Ou <jianhong.ou@duke.edu>
-Depends: R (>= 4.0.0)
+Depends: R (>= 4.1.2)
 Suggests: knitr, rmarkdown, pkgdown
-Description: This package serves as a container for basic bioinformatics RNI2020 files.
+Description: This package serves as a container for basic bioinformatics RNI2022 files.
 License: GPL (>= 2)
 Lazyload: yes
 URL: https://jianhong.github.io/genomictools

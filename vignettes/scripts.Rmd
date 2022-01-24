@@ -44,7 +44,7 @@ And then run the following code in a terminal.
 ## set docker memory to > 5G ; !important
 cd ~
 mkdir tmp4genomictools
-docker run -e PASSWORD=123456 -p 8787:8787 \
+docker run --user rstudio -e PASSWORD=123456 -p 8787:8787 \
   -v ${PWD}/tmp4genomictools:/home/rstudio \
   jianhong/genomictools:latest
 ```
@@ -56,7 +56,7 @@ All the following steps are running in Rstudio "Terminal" or "Console".
 ## Run kallisto and Salmon for RNA-seq
 
 The sample files are packaged 
-in basicBioinformaticsRNI2020 package and Docker container. 
+in basicBioinformaticsRNI2022 package and Docker container. 
 
 Now we will download the zebrafish cDNA files from ENSEMBL in order to build the 
 Kallisto and Salmon transcript index. If you are doing rRNA depletion library,
@@ -65,7 +65,7 @@ full transcriptome.
 
 ```{bash, eval=FALSE}
 cd RNAseq
-wget ftp://ftp.ensembl.org/pub/release-100/fasta/danio_rerio/cdna/Danio_rerio.GRCz11.cdna.all.fa.gz
+wget ftp://ftp.ensembl.org/pub/release-105/fasta/danio_rerio/cdna/Danio_rerio.GRCz11.cdna.all.fa.gz
 ```
 
 Now we can build the transcriptome index. It will take some time and memory. 
@@ -229,7 +229,7 @@ the alignment process.
 ## change you working directory
 cd /home/rstudio/ChIPseq
 ## download the zebrafish GRCz11 genome from ENSEMBLE
-wget ftp://ftp.ensembl.org/pub/release-100/fasta/danio_rerio/dna/Danio_rerio.GRCz11.dna.primary_assembly.fa.gz
+wget ftp://ftp.ensembl.org/pub/release-105/fasta/danio_rerio/dna/Danio_rerio.GRCz11.dna.primary_assembly.fa.gz
 ## build the index
 ## -p: prefix for all index files
 bwa index -p GRCz11 Danio_rerio.GRCz11.dna.primary_assembly.fa.gz
@@ -283,11 +283,6 @@ samtools index bam/$prefix.$species.${tag[$i]}.srt.bam
 ## remove un-sorted bam file.
 rm bam/$prefix.$species.${tag[$i]}.bam
 
-## use deeptools::bamCoverage to generate bigwig files
-## the bw file can be viewed in IGV
-mkdir -p bw
-bamCoverage -b bam/$prefix.$species.${tag[$i]}.srt.bam -o bw/$prefix.$species.${tag[$i]}.bw --normalizeUsing CPM
-
 ## we remove the duplicated by picard::MarkDuplicates. 
 mkdir -p bam/picard
 picard MarkDuplicates \
@@ -297,6 +292,10 @@ picard MarkDuplicates \
        REMOVE_DUPLICATES=true ASSUME_SORTED=true VALIDATION_STRINGENCY=LENIENT
 samtools index bam/$prefix.$species.${tag[$i]}.srt.markDup.bam
 
+## use deeptools::bamCoverage to generate bigwig files
+## the bw file can be viewed in IGV
+mkdir -p bw
+bamCoverage -b bam/$prefix.$species.${tag[$i]}.srt.markDup.bam -o bw/$prefix.$species.${tag[$i]}.bw --normalizeUsing CPM
 
 ## call peaks by macs2
 mkdir -p macs2/${tag[$i]}
