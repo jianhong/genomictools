@@ -13,7 +13,7 @@
 #  $ cd ~
 #  $ docker pull jianhong/genomictools:latest
 #  $ mkdir tmp4genomictools
-#  $ docker run -it --rm --user rstudio -e PASSWORD=123456 -p 8787:8787 -v ${PWD}/tmp4genomictools:/home/rstudio jianhong/genomictools:latest
+#  $ docker run -it --rm --user rstudio -e PASSWORD=123456 -p 8787:8787 -v ${PWD}/tmp4genomictools:/data jianhong/genomictools:latest
 # ## then you can connect the rstudio with localhost:8787 by username: rstudio password:123456
 ##################################################################
 # Set the base image to Ubuntu
@@ -67,14 +67,18 @@ RUN wget http://hgdownload.soe.ucsc.edu/admin/exe/linux.x86_64/bedGraphToBigWig 
 RUN Rscript -e  "BiocManager::install(c('biomaRt', 'dplyr', 'tximport', 'DESeq2', 'DiffBind', 'EnhancedVolcano'), suppressUpdates=TRUE, ask=FALSE)"
 RUN Rscript -e  "BiocManager::install(c('pachterlab/sleuth', update = TRUE, ask=FALSE))"
 RUN Rscript -e  "BiocManager::install(c('jianhong/genomictools', update = TRUE, ask=FALSE))"
-RUN path="/usr/local/lib/R/site-library/basicBioinformaticsRNI2022/extdata" && \
-    cp -r $path/RNAseq /home/rstudio/ && \
-    cp -r $path/ChIPseq /home/rstudio/
+
 ## install phantompeakqualtools
 RUN git clone https://github.com/kundajelab/phantompeakqualtools && \
     Rscript -e "install.packages('phantompeakqualtools/spp_1.14.tar.gz')"
+    
+RUN path="/usr/local/lib/R/site-library/basicBioinformaticsRNI2022/extdata" && \
+    cp -r $path/RNAseq /home/rstudio/ && \
+    cp -r $path/ChIPseq /home/rstudio/
+
+## change the logger-type=stderr to syslog
+RUN sed -i 's/stderr/syslog/g' /etc/rstudio/logging.conf
 
 # Define working directory.
 WORKDIR /home/rstudio
-COPY --chown=rstudio:rstudio . /home/rstudio/
 
