@@ -1,4 +1,4 @@
-# RNI2020 basic bioinformatics
+# RNI2022 basic bioinformatics
 
 ![.github/workflows/push_docker.yaml](https://github.com/jianhong/genomictools/workflows/.github/workflows/push_docker.yaml/badge.svg)
 
@@ -18,7 +18,7 @@ the slides for the course.
 ## genomictools
 docker file for genomic tools
 
-Dockerfile to build bwa, bowtie2, kallisto, cufflinks, MACS2, samtools, 
+Dockerfile to build bwa, kallisto, MACS2, samtools, 
 picard-tools, fastQC, bedtools, cutadapt, deeptools, 
 R, ucsc genome tools
 images

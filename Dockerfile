@@ -65,13 +65,14 @@ RUN wget http://hgdownload.soe.ucsc.edu/admin/exe/linux.x86_64/bedGraphToBigWig 
 
 ## Install Bioconductor
 RUN Rscript -e  "BiocManager::install(c('biomaRt', 'dplyr', 'tximport', 'DESeq2', 'DiffBind', 'EnhancedVolcano'), suppressUpdates=TRUE, ask=FALSE)"
-RUN Rscript -e  "BiocManager::install(c('pachterlab/sleuth', 'jianhong/genomictools', update = TRUE, ask=FALSE))"
+RUN Rscript -e  "BiocManager::install(c('pachterlab/sleuth', update = TRUE, ask=FALSE))"
+RUN Rscript -e  "BiocManager::install(c('jianhong/genomictools', update = TRUE, ask=FALSE))"
 RUN path="/usr/local/lib/R/site-library/basicBioinformaticsRNI2022/extdata" && \
     cp -r $path/RNAseq /home/rstudio/ && \
     cp -r $path/ChIPseq /home/rstudio/
 ## install phantompeakqualtools
 RUN git clone https://github.com/kundajelab/phantompeakqualtools && \
-    Rscripts -e "install.packages('phantompeakqualtools/spp_1.14.tar.gz')"
+    Rscript -e "install.packages('phantompeakqualtools/spp_1.14.tar.gz')"
 
 # Define working directory.
 WORKDIR /home/rstudio
