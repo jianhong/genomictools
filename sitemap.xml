@@ -1,9 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://jianhong.github.io/genoimctools/index.html</loc>
+    <loc>https://jianhong.github.io/genoimctools/404.html</loc>
+  </url>
+  <url>
+    <loc>https://jianhong.github.io/genoimctools/articles/index.html</loc>
   </url>
   <url>
     <loc>https://jianhong.github.io/genoimctools/articles/scripts.html</loc>
+  </url>
+  <url>
+    <loc>https://jianhong.github.io/genoimctools/authors.html</loc>
+  </url>
+  <url>
+    <loc>https://jianhong.github.io/genoimctools/index.html</loc>
+  </url>
+  <url>
+    <loc>https://jianhong.github.io/genoimctools/reference/index.html</loc>
   </url>
 </urlset>
