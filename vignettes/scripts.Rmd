@@ -278,7 +278,7 @@ bwa index -p GRCz11.toy Danio_rerio.GRCz11.dna.toy.fa.gz
 
 ### Run fastQC, mapping and MACS2
 
-We will the scripts in a bash loop. The samples are from two uninjured 
+We will run the scripts in a bash loop. The samples are from two uninjured 
 and two ablated fish heart tissue. 
 We use fastQC to check the quality of raw reads. The results will saved to 
 "fastqc" folder. You can go through the results by click the index.html file
@@ -354,6 +354,51 @@ macs2 callpeak -t bam/${prefix}.$species.${tag[$i]}.srt.markDup.bam \
 done
 ```
 
+### Differential analysis
+
+We will use `DiffBind` package to do the differential analysis.
+
+```{r, eval=FALSE}
+setwd("/home/rstudio/data/ChIPseq")
+library("DiffBind")
+(bams <- dir("bam", "markDup.bam$", full.names = TRUE))
+(Peaks <- dir("macs2", "narrowPeak$", full.names = TRUE, recursive = TRUE))
+(SampleID <- basename(dirname(Peaks)))
+(Condition <- sub(".rep.", "", SampleID))
+(Replicate <- sub("^.*rep", "", SampleID))
+Peakcaller <- "macs2"
+PeakFormat <- "narrowPeak"
+samples <- data.frame(SampleID=SampleID,
+                      Condition=Condition,
+                      Replicate=Replicate,
+                      bamReads=bams,
+                      Peaks=Peaks,
+                      Peakcaller=Peakcaller,
+                      PeakFormat=PeakFormat,
+                      ScoreCol=5)
+
+pf <- "DiffBind"
+out <- "sample.csv"
+dir.create(pf)
+write.csv(samples, file.path(pf, out))
+chip <- dba(sampleSheet = file.path(pf, out))
+pdf(file.path(pf, "DiffBind.sample.correlation.pdf"), width = 9, height = 9)
+plot(chip)
+dev.off()
+pdf(file.path(pf, "DiffBind.PCA.plot.pdf"))
+dba.plotPCA(chip, DBA_CONDITION, label=DBA_ID)
+dev.off()
+
+chip <- dba.count(chip)
+chip <- dba.normalize(chip) ## add for DiffBind 3.0
+BLACKLIST <- FALSE ## fish data, no blacklist yet.
+chip <- dba.blacklist(chip, blacklist=BLACKLIST, greylist=FALSE)
+chip <- dba.contrast(chip, minMembers=2, categories = DBA_CONDITION)
+chip <- dba.analyze(chip, bBlacklist = FALSE, bGreylist = FALSE)
+chip.DB <- dba.report(chip, th=1)
+head(chip.DB)
+write.csv(chip.DB, file.path(pf, "DiffBind.results.csv"), row.names=FALSE)
+```
 
 
 
