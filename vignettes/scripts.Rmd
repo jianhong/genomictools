@@ -46,7 +46,7 @@ And then run the following code in a terminal.
 cd ~
 mkdir tmp4genomictools
 docker run --memory 5g -e PASSWORD=123456 -p 8787:8787 \
-  -v ${PWD}/tmp4genomictools:/data \
+  -v ${PWD}/tmp4genomictools:/home/rstudio/data \
   jianhong/genomictools:latest
 ```
 
@@ -246,8 +246,8 @@ the alignment process.
 
 ```{bash, eval=FALSE}
 ## change you working directory
-ln -s /home/rstudio/ChIPseq /data/ChIPseq
-cd /data
+ln -s /home/rstudio/ChIPseq /home/rstudio/data/ChIPseq
+cd /home/rstudio/data
 ## download the zebrafish GRCz11 genome from ENSEMBLE
 wget ftp://ftp.ensembl.org/pub/release-105/fasta/danio_rerio/dna/Danio_rerio.GRCz11.dna.primary_assembly.fa.gz
 ## build the index
