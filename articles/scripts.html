@@ -119,7 +119,7 @@
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~</span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> tmp4genomictools</span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">--memory</span> 5g <span class="at">-e</span> PASSWORD=123456 <span class="at">-p</span> 8787:8787 <span class="dt">\</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">-v</span> <span class="va">${PWD}</span>/tmp4genomictools:/data <span class="dt">\</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">-v</span> <span class="va">${PWD}</span>/tmp4genomictools:/home/rstudio/data <span class="dt">\</span></span>
 <span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  jianhong/genomictools:latest</span></code></pre></div>
 <p>“docker run” will open port 8787 on your system. Now you can login rstudio in the container at <a href="http://localhost:8787" class="external-link uri">http://localhost:8787</a> with username “rstudio” and password “123456”. All the following steps are running in Rstudio “Terminal” or “Console”.</p>
 </div>
@@ -266,8 +266,8 @@
 <p>The sample data is located at “/home/rstudio/ChIPseq” folder. It is zebrafish H3 ChIP-seq data.</p>
 <p>We will map the reads by BWA (Burrows-Wheeler Aligner). Compare to Bowtie2, BWA is a little slower but a bit more accurate and provides information on which alignments are trustworthy. The bwa-mem mode is generally recommended for high-quality queries. It is not limited by sequence reads size as bwa-backtrack and bwa-sw. Aligning reads with bwa-mem, there are two steps, build the index and do alignment. BWA indexes the genome with an FM index based on the Burrows-Wheeler Transform to keep memory requirements low for the alignment process.</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co">## change you working directory</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ln</span> <span class="at">-s</span> /home/rstudio/ChIPseq /data/ChIPseq</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> /data</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ln</span> <span class="at">-s</span> /home/rstudio/ChIPseq /home/rstudio/data/ChIPseq</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> /home/rstudio/data</span>
 <span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co">## download the zebrafish GRCz11 genome from ENSEMBLE</span></span>
 <span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="fu">wget</span> ftp://ftp.ensembl.org/pub/release-105/fasta/danio_rerio/dna/Danio_rerio.GRCz11.dna.primary_assembly.fa.gz</span>
 <span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="co">## build the index</span></span>
