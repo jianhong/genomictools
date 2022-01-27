@@ -267,7 +267,7 @@
 <p>We will map the reads by BWA (Burrows-Wheeler Aligner). Compare to Bowtie2, BWA is a little slower but a bit more accurate and provides information on which alignments are trustworthy. The bwa-mem mode is generally recommended for high-quality queries. It is not limited by sequence reads size as bwa-backtrack and bwa-sw. Aligning reads with bwa-mem, there are two steps, build the index and do alignment. BWA indexes the genome with an FM index based on the Burrows-Wheeler Transform to keep memory requirements low for the alignment process.</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co">## change you working directory</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ln</span> <span class="at">-s</span> /home/rstudio/ChIPseq /data/ChIPseq</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> /data/ChIPseq</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> /data</span>
 <span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co">## download the zebrafish GRCz11 genome from ENSEMBLE</span></span>
 <span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="fu">wget</span> ftp://ftp.ensembl.org/pub/release-105/fasta/danio_rerio/dna/Danio_rerio.GRCz11.dna.primary_assembly.fa.gz</span>
 <span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="co">## build the index</span></span>
@@ -275,7 +275,8 @@
 <span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="ex">bwa</span> index <span class="at">-p</span> GRCz11 Danio_rerio.GRCz11.dna.primary_assembly.fa.gz</span></code></pre></div>
 <p>The data are only a subset of the whole genome. We will only use genes in chromosome 4, 13, 16 and 21 to speed up the test run.</p>
 <div class="sourceCode" id="cb13"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">wget</span> https://raw.githubusercontent.com/jianhong/genomictools/master/inst/extdata/Danio_rerio.GRCz11.dna.toy.fa.gz</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="ex">bwa</span> index <span class="at">-p</span> GRCz11.toy Danio_rerio.GRCz11.dna.toy.fa.gz</span></code></pre></div>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co">## the following step will take about 3min</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="ex">bwa</span> index <span class="at">-p</span> GRCz11.toy Danio_rerio.GRCz11.dna.toy.fa.gz</span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="run-fastqc-mapping-and-macs2">Run fastQC, mapping and MACS2<a class="anchor" aria-label="anchor" href="#run-fastqc-mapping-and-macs2"></a>
