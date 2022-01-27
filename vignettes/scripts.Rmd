@@ -212,7 +212,8 @@ res.kallisto[!is.na(res.kallisto$padj), ]
 
 ### run Sleuth
 
-The following code is showing how to use sleuth to do DE analysis.
+The following code is showing how to use sleuth to do DE analysis. 
+However, the sleuth package is not updated. It may be broken.
 ```{r}
 #BiocManager::install("pachterlab/sleuth")
 library(sleuth)
