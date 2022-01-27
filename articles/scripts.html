@@ -115,11 +115,12 @@
 <p>Change the docker Memory Resources to &gt;= 5G in the Preferences setting page of Docker. And then run the following code in a terminal.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">## set docker memory to &gt; 5G</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co">## set docker memory to &gt; 5G ; !important</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> tmp4genomictools</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">-e</span> PASSWORD=123456 <span class="at">-p</span> 8787:8787 <span class="dt">\</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">-v</span> <span class="va">${PWD}</span>/tmp4genomictools:/data <span class="dt">\</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  jianhong/genomictools:latest</span></code></pre></div>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">## RStudio server will not work for M1 chip MacBook.</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> tmp4genomictools</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">--memory</span> 5g <span class="at">-e</span> PASSWORD=123456 <span class="at">-p</span> 8787:8787 <span class="dt">\</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">-v</span> <span class="va">${PWD}</span>/tmp4genomictools:/data <span class="dt">\</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  jianhong/genomictools:latest</span></code></pre></div>
 <p>“docker run” will open port 8787 on your system. Now you can login rstudio in the container at <a href="http://localhost:8787" class="external-link uri">http://localhost:8787</a> with username “rstudio” and password “123456”. All the following steps are running in Rstudio “Terminal” or “Console”.</p>
 </div>
 </div>
@@ -145,23 +146,28 @@
 <p>For Salmon, now we can set library type to “A”.</p>
 <p>In this example, we put “-t 2” and “-p 2” so we can use up to two processors in the bootstrapping. We set the bootstrapping by “-b 30” and “–numBootstraps 30”.</p>
 <p>It will take several minutes for the sample data.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> kallisto_quant</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> salmon_quant</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> rep <span class="kw">in</span> 1 2</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="cf">do</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> cond <span class="kw">in</span> Ablated Uninjured</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="cf">do</span></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="ex">kallisto</span> quant <span class="at">-i</span> danRer.GRCz11_transcrits.toy.idx <span class="dt">\</span></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>               <span class="at">-o</span> kallisto_quant/<span class="va">$cond</span>.rep<span class="va">$rep</span> <span class="dt">\</span></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>               <span class="at">-b</span> 30 <span class="at">-t</span> 2 fastq/<span class="va">$cond</span>.rep<span class="va">$rep</span>.fastq.gz <span class="dt">\</span></span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>               <span class="at">--single</span> <span class="at">-l</span> 200 <span class="at">-s</span> 50</span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="ex">salmon</span> quant <span class="at">-i</span> danRer.GRCz11_transcrits.toy.salmon.idx <span class="at">-l</span> A <span class="dt">\</span></span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>             <span class="at">-r</span> fastq/<span class="va">$cond</span>.rep<span class="va">$rep</span>.fastq.gz <span class="dt">\</span></span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>             <span class="at">--validateMappings</span> <span class="at">-p</span> 2 <span class="dt">\</span></span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>             <span class="at">-o</span> salmon_quant/<span class="va">$cond</span>.rep<span class="va">$rep</span> <span class="dt">\</span></span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>             <span class="at">--numBootstraps</span> 30 <span class="at">--seqBias</span> <span class="at">--gcBias</span></span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="cf">done</span></span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a><span class="cf">done</span></span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># the toy RNAseq data is saved in /home/rstudio/RNAseq folder</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co"># create a link to current folder</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ln</span> <span class="at">-s</span> /home/rstudio/RNAseq/fastq ./fastq</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co"># mapping</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Ablated and Uninjured are related with fastq file name</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> kallisto_quant</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> salmon_quant</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> rep <span class="kw">in</span> 1 2</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="cf">do</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> cond <span class="kw">in</span> Ablated Uninjured</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="cf">do</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="ex">kallisto</span> quant <span class="at">-i</span> danRer.GRCz11_transcrits.toy.idx <span class="dt">\</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>               <span class="at">-o</span> kallisto_quant/<span class="va">$cond</span>.rep<span class="va">$rep</span> <span class="dt">\</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>               <span class="at">-b</span> 30 <span class="at">-t</span> 2 fastq/<span class="va">$cond</span>.rep<span class="va">$rep</span>.fastq.gz <span class="dt">\</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>               <span class="at">--single</span> <span class="at">-l</span> 200 <span class="at">-s</span> 50</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="ex">salmon</span> quant <span class="at">-i</span> danRer.GRCz11_transcrits.toy.salmon.idx <span class="at">-l</span> A <span class="dt">\</span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>             <span class="at">-r</span> fastq/<span class="va">$cond</span>.rep<span class="va">$rep</span>.fastq.gz <span class="dt">\</span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>             <span class="at">--validateMappings</span> <span class="at">-p</span> 2 <span class="dt">\</span></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>             <span class="at">-o</span> salmon_quant/<span class="va">$cond</span>.rep<span class="va">$rep</span> <span class="dt">\</span></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>             <span class="at">--numBootstraps</span> 30 <span class="at">--seqBias</span> <span class="at">--gcBias</span></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a><span class="cf">done</span></span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a><span class="cf">done</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="r-scripts-for-rnaseq">R scripts for RNAseq<a class="anchor" aria-label="anchor" href="#r-scripts-for-rnaseq"></a>
@@ -196,7 +202,7 @@
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">tximport</span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">DESeq2</span><span class="op">)</span>
 
-<span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">setwd</a></span><span class="op">(</span><span class="st">"RNAseq/"</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">setwd</a></span><span class="op">(</span><span class="st">"RNAseq/"</span><span class="op">)</span> <span class="co">## RNAseq is the folder where saved the salmon_quant and kallisto_quant</span>
 <span class="op">(</span><span class="va">salmon_files</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.files.html" class="external-link">dir</a></span><span class="op">(</span><span class="st">"salmon_quant"</span>, <span class="st">"sf$"</span>, 
                      recursive <span class="op">=</span> <span class="cn">TRUE</span>, 
                      full.names <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>
@@ -260,12 +266,13 @@
 <p>The sample data is located at “/home/rstudio/ChIPseq” folder. It is zebrafish H3 ChIP-seq data.</p>
 <p>We will map the reads by BWA (Burrows-Wheeler Aligner). Compare to Bowtie2, BWA is a little slower but a bit more accurate and provides information on which alignments are trustworthy. The bwa-mem mode is generally recommended for high-quality queries. It is not limited by sequence reads size as bwa-backtrack and bwa-sw. Aligning reads with bwa-mem, there are two steps, build the index and do alignment. BWA indexes the genome with an FM index based on the Burrows-Wheeler Transform to keep memory requirements low for the alignment process.</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co">## change you working directory</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> /home/rstudio/ChIPseq</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co">## download the zebrafish GRCz11 genome from ENSEMBLE</span></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="fu">wget</span> ftp://ftp.ensembl.org/pub/release-105/fasta/danio_rerio/dna/Danio_rerio.GRCz11.dna.primary_assembly.fa.gz</span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="co">## build the index</span></span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="co">## -p: prefix for all index files</span></span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="ex">bwa</span> index <span class="at">-p</span> GRCz11 Danio_rerio.GRCz11.dna.primary_assembly.fa.gz</span></code></pre></div>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ln</span> <span class="at">-s</span> /home/rstudio/ChIPseq /data/ChIPseq</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> /data/ChIPseq</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co">## download the zebrafish GRCz11 genome from ENSEMBLE</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="fu">wget</span> ftp://ftp.ensembl.org/pub/release-105/fasta/danio_rerio/dna/Danio_rerio.GRCz11.dna.primary_assembly.fa.gz</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="co">## build the index</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="co">## -p: prefix for all index files</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="ex">bwa</span> index <span class="at">-p</span> GRCz11 Danio_rerio.GRCz11.dna.primary_assembly.fa.gz</span></code></pre></div>
 <p>The data are only a subset of the whole genome. We will only use genes in chromosome 4, 13, 16 and 21 to speed up the test run.</p>
 <div class="sourceCode" id="cb13"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">wget</span> https://raw.githubusercontent.com/jianhong/genomictools/master/inst/extdata/Danio_rerio.GRCz11.dna.toy.fa.gz</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="ex">bwa</span> index <span class="at">-p</span> GRCz11.toy Danio_rerio.GRCz11.dna.toy.fa.gz</span></code></pre></div>
