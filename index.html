@@ -107,8 +107,8 @@
 $ cd ~
 $ docker pull jianhong/genomictools:latest
 $ mkdir tmp4genomictools
-$ docker run --user rstudio -e PASSWORD=123456 -p 8787:8787 \
-$       -v ${PWD}/tmp4genomictools:/home/rstudio \
+$ docker run -e PASSWORD=123456 -p 8787:8787 \
+$       -v ${PWD}/tmp4genomictools:/data \
 $       jianhong/genomictools:latest
 
 </pre>
