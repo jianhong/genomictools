@@ -13,7 +13,7 @@
 #  $ cd ~
 #  $ docker pull jianhong/genomictools:latest
 #  $ mkdir tmp4genomictools
-#  $ docker run -it --rm --user rstudio -e PASSWORD=123456 -p 8787:8787 -v ${PWD}/tmp4genomictools:/data jianhong/genomictools:latest
+#  $ docker run -it --rm -e PASSWORD=123456 -p 8787:8787 -v ${PWD}/tmp4genomictools:/data jianhong/genomictools:latest
 # ## then you can connect the rstudio with localhost:8787 by username: rstudio password:123456
 ##################################################################
 # Set the base image to Ubuntu
