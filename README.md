@@ -24,6 +24,7 @@ R, ucsc genome tools
 images
 Based on Ubuntu
 
+This image will not work on M1 chip macbook for RStudio Sever. 
 <pre>
 $ cd ~
 $ docker pull jianhong/genomictools:latest

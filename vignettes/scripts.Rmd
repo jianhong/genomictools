@@ -42,9 +42,10 @@ And then run the following code in a terminal.
 ```{bash, eval=FALSE}
 ## set docker memory to > 5G
 ## set docker memory to > 5G ; !important
+## RStudio server will not work for M1 chip MacBook.
 cd ~
 mkdir tmp4genomictools
-docker run -e PASSWORD=123456 -p 8787:8787 \
+docker run --memory 5g -e PASSWORD=123456 -p 8787:8787 \
   -v ${PWD}/tmp4genomictools:/data \
   jianhong/genomictools:latest
 ```
@@ -106,6 +107,11 @@ in the bootstrapping. We set the bootstrapping by "-b 30" and "--numBootstraps 3
 It will take several minutes for the sample data.
 
 ```{bash, eval=FALSE}
+# the toy RNAseq data is saved in /home/rstudio/RNAseq folder
+# create a link to current folder
+ln -s /home/rstudio/RNAseq/fastq ./fastq
+# mapping
+# Ablated and Uninjured are related with fastq file name
 mkdir -p kallisto_quant
 mkdir -p salmon_quant
 for rep in 1 2
@@ -165,7 +171,7 @@ aggregate to gene level. Downstream are using DESeq2 to do gene level DE analysi
 library(tximport)
 library(DESeq2)
 
-setwd("RNAseq/")
+setwd("RNAseq/") ## RNAseq is the folder where saved the salmon_quant and kallisto_quant
 (salmon_files <- dir("salmon_quant", "sf$", 
                      recursive = TRUE, 
                      full.names = TRUE))
@@ -240,7 +246,8 @@ the alignment process.
 
 ```{bash, eval=FALSE}
 ## change you working directory
-cd /home/rstudio/ChIPseq
+ln -s /home/rstudio/ChIPseq /data/ChIPseq
+cd /data/ChIPseq
 ## download the zebrafish GRCz11 genome from ENSEMBLE
 wget ftp://ftp.ensembl.org/pub/release-105/fasta/danio_rerio/dna/Danio_rerio.GRCz11.dna.primary_assembly.fa.gz
 ## build the index
