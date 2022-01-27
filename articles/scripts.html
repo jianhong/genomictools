@@ -136,7 +136,9 @@
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="ex">salmon</span> index <span class="at">-i</span> danRer.GRCz11_transcrits.salmon.idx <span class="at">-t</span> Danio_rerio.GRCz11.cdna.all.fa.gz</span></code></pre></div>
 <p>The data are only a subset of the whole genome. We will only use genes in chromosome 4, 13, 16 and 21 to speed up the test run.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">wget</span> https://raw.githubusercontent.com/jianhong/genomictools/master/inst/extdata/Danio_rerio.GRCz11.cdna.toy.fa.gz</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> data/RNAseq</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> data/RNAseq</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">wget</span> https://raw.githubusercontent.com/jianhong/genomictools/master/inst/extdata/Danio_rerio.GRCz11.cdna.toy.fa.gz</span></code></pre></div>
 <p>It will take several seconds to build the toy index.</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">kallisto</span> index <span class="at">-i</span> danRer.GRCz11_transcrits.toy.idx Danio_rerio.GRCz11.cdna.toy.fa.gz</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -178,7 +180,8 @@
 </h3>
 <p>We are trying to do gene level DE analysis. We need to aggregate the transcript level counts to gene level. We borrowed from the Sleuth documentation by retrieve ENSEMBL transcript id to gene id.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">biomaRt</span><span class="op">)</span>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">setwd</a></span><span class="op">(</span><span class="st">"data/RNAseq"</span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">biomaRt</span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span>
 <span class="va">tx2gene</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">species</span><span class="op">=</span><span class="st">"hsapiens"</span>, <span class="va">...</span><span class="op">)</span><span class="op">{</span>
   <span class="va">mart</span> <span class="op">&lt;-</span> <span class="fu">biomaRt</span><span class="fu">::</span><span class="fu">useMart</span><span class="op">(</span>biomart <span class="op">=</span> <span class="st">"ensembl"</span>, 
