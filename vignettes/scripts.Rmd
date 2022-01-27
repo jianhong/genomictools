@@ -247,7 +247,7 @@ the alignment process.
 ```{bash, eval=FALSE}
 ## change you working directory
 ln -s /home/rstudio/ChIPseq /data/ChIPseq
-cd /data/ChIPseq
+cd /data
 ## download the zebrafish GRCz11 genome from ENSEMBLE
 wget ftp://ftp.ensembl.org/pub/release-105/fasta/danio_rerio/dna/Danio_rerio.GRCz11.dna.primary_assembly.fa.gz
 ## build the index
@@ -259,6 +259,7 @@ The data are only a subset of the whole genome. We will only use genes in
 chromosome 4, 13, 16 and 21 to speed up the test run.
 ```{bash, eval=FALSE}
 wget https://raw.githubusercontent.com/jianhong/genomictools/master/inst/extdata/Danio_rerio.GRCz11.dna.toy.fa.gz
+## the following step will take about 3min
 bwa index -p GRCz11.toy Danio_rerio.GRCz11.dna.toy.fa.gz
 ```
 
