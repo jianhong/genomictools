@@ -65,7 +65,7 @@ RUN wget http://hgdownload.soe.ucsc.edu/admin/exe/linux.x86_64/bedGraphToBigWig 
 
 ## Install Bioconductor
 RUN Rscript -e  "BiocManager::install(c('biomaRt', 'dplyr', 'tximport', 'DESeq2', 'DiffBind', 'EnhancedVolcano'), suppressUpdates=TRUE, ask=FALSE)"
-RUN Rscript -e  "BiocManager::install('pachterlab/sleuth', update = TRUE, ask=FALSE)"
+#RUN Rscript -e  "BiocManager::install('pachterlab/sleuth', update = TRUE, ask=FALSE)"
 RUN Rscript -e  "BiocManager::install('jianhong/genomictools', update = TRUE, ask=FALSE)"
 
 ## install phantompeakqualtools

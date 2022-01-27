@@ -81,6 +81,8 @@ salmon index -i danRer.GRCz11_transcrits.salmon.idx -t Danio_rerio.GRCz11.cdna.a
 The data are only a subset of the whole genome. We will only use genes in
 chromosome 4, 13, 16 and 21 to speed up the test run.
 ```{bash, eval=FALSE}
+mkdir data/RNAseq
+cd data/RNAseq
 wget https://raw.githubusercontent.com/jianhong/genomictools/master/inst/extdata/Danio_rerio.GRCz11.cdna.toy.fa.gz
 ```
 
@@ -144,6 +146,7 @@ level counts to gene level. We borrowed from the Sleuth documentation by
 retrieve ENSEMBL transcript id to gene id.
 
 ```{r, eval=FALSE}
+setwd("data/RNAseq")
 library(biomaRt)
 library(dplyr)
 tx2gene <- function(species="hsapiens", ...){
