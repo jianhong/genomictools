@@ -289,7 +289,7 @@
 <div class="section level3">
 <h3 id="run-fastqc-mapping-and-macs2">Run fastQC, mapping and MACS2<a class="anchor" aria-label="anchor" href="#run-fastqc-mapping-and-macs2"></a>
 </h3>
-<p>We will the scripts in a bash loop. The samples are from two uninjured and two ablated fish heart tissue. We use fastQC to check the quality of raw reads. The results will saved to “fastqc” folder. You can go through the results by click the index.html file in each sub-folder. We will perform alignment on the single-end reads. For more information on BWA and its functionality please refer to the <a href="http://bio-bwa.sourceforge.net/bwa.shtml" class="external-link">user manual</a>. <a href="https://github.com/macs3-project/MACS" class="external-link">MACS2</a> will be used to call the peaks.</p>
+<p>We will run the scripts in a bash loop. The samples are from two uninjured and two ablated fish heart tissue. We use fastQC to check the quality of raw reads. The results will saved to “fastqc” folder. You can go through the results by click the index.html file in each sub-folder. We will perform alignment on the single-end reads. For more information on BWA and its functionality please refer to the <a href="http://bio-bwa.sourceforge.net/bwa.shtml" class="external-link">user manual</a>. <a href="https://github.com/macs3-project/MACS" class="external-link">MACS2</a> will be used to call the peaks.</p>
 <div class="sourceCode" id="cb15"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="va">group</span><span class="op">=</span><span class="va">(</span>Ablated Ablated Uninjured Uninjured<span class="va">)</span></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="va">tag</span><span class="op">=</span><span class="va">(</span>Ablated.rep1 Ablated.rep2 Uninjured.rep1 Uninjured.rep2<span class="va">)</span></span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="va">species</span><span class="op">=</span>danRer11</span>
@@ -354,6 +354,51 @@
 <span id="cb15-62"><a href="#cb15-62" aria-hidden="true" tabindex="-1"></a>               <span class="at">-B</span> <span class="at">--nomodel</span> <span class="at">--extsize</span> 150</span>
 <span id="cb15-63"><a href="#cb15-63" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb15-64"><a href="#cb15-64" aria-hidden="true" tabindex="-1"></a><span class="cf">done</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="differential-analysis">Differential analysis<a class="anchor" aria-label="anchor" href="#differential-analysis"></a>
+</h3>
+<p>We will use <code>DiffBind</code> package to do the differential analysis.</p>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">setwd</a></span><span class="op">(</span><span class="st">"/home/rstudio/data/ChIPseq"</span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st">"DiffBind"</span><span class="op">)</span>
+<span class="op">(</span><span class="va">bams</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.files.html" class="external-link">dir</a></span><span class="op">(</span><span class="st">"bam"</span>, <span class="st">"markDup.bam$"</span>, full.names <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>
+<span class="op">(</span><span class="va">Peaks</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.files.html" class="external-link">dir</a></span><span class="op">(</span><span class="st">"macs2"</span>, <span class="st">"narrowPeak$"</span>, full.names <span class="op">=</span> <span class="cn">TRUE</span>, recursive <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>
+<span class="op">(</span><span class="va">SampleID</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/basename.html" class="external-link">basename</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/basename.html" class="external-link">dirname</a></span><span class="op">(</span><span class="va">Peaks</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+<span class="op">(</span><span class="va">Condition</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">sub</a></span><span class="op">(</span><span class="st">".rep."</span>, <span class="st">""</span>, <span class="va">SampleID</span><span class="op">)</span><span class="op">)</span>
+<span class="op">(</span><span class="va">Replicate</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">sub</a></span><span class="op">(</span><span class="st">"^.*rep"</span>, <span class="st">""</span>, <span class="va">SampleID</span><span class="op">)</span><span class="op">)</span>
+<span class="va">Peakcaller</span> <span class="op">&lt;-</span> <span class="st">"macs2"</span>
+<span class="va">PeakFormat</span> <span class="op">&lt;-</span> <span class="st">"narrowPeak"</span>
+<span class="va">samples</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>SampleID<span class="op">=</span><span class="va">SampleID</span>,
+                      Condition<span class="op">=</span><span class="va">Condition</span>,
+                      Replicate<span class="op">=</span><span class="va">Replicate</span>,
+                      bamReads<span class="op">=</span><span class="va">bams</span>,
+                      Peaks<span class="op">=</span><span class="va">Peaks</span>,
+                      Peakcaller<span class="op">=</span><span class="va">Peakcaller</span>,
+                      PeakFormat<span class="op">=</span><span class="va">PeakFormat</span>,
+                      ScoreCol<span class="op">=</span><span class="fl">5</span><span class="op">)</span>
+
+<span class="va">pf</span> <span class="op">&lt;-</span> <span class="st">"DiffBind"</span>
+<span class="va">out</span> <span class="op">&lt;-</span> <span class="st">"sample.csv"</span>
+<span class="fu"><a href="https://rdrr.io/r/base/files2.html" class="external-link">dir.create</a></span><span class="op">(</span><span class="va">pf</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/write.table.html" class="external-link">write.csv</a></span><span class="op">(</span><span class="va">samples</span>, <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">pf</span>, <span class="va">out</span><span class="op">)</span><span class="op">)</span>
+<span class="va">chip</span> <span class="op">&lt;-</span> <span class="fu">dba</span><span class="op">(</span>sampleSheet <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">pf</span>, <span class="va">out</span><span class="op">)</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/grDevices/pdf.html" class="external-link">pdf</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">pf</span>, <span class="st">"DiffBind.sample.correlation.pdf"</span><span class="op">)</span>, width <span class="op">=</span> <span class="fl">9</span>, height <span class="op">=</span> <span class="fl">9</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">chip</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/grDevices/dev.html" class="external-link">dev.off</a></span><span class="op">(</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/grDevices/pdf.html" class="external-link">pdf</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">pf</span>, <span class="st">"DiffBind.PCA.plot.pdf"</span><span class="op">)</span><span class="op">)</span>
+<span class="fu">dba.plotPCA</span><span class="op">(</span><span class="va">chip</span>, <span class="va">DBA_CONDITION</span>, label<span class="op">=</span><span class="va">DBA_ID</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/grDevices/dev.html" class="external-link">dev.off</a></span><span class="op">(</span><span class="op">)</span>
+
+<span class="va">chip</span> <span class="op">&lt;-</span> <span class="fu">dba.count</span><span class="op">(</span><span class="va">chip</span><span class="op">)</span>
+<span class="va">chip</span> <span class="op">&lt;-</span> <span class="fu">dba.normalize</span><span class="op">(</span><span class="va">chip</span><span class="op">)</span> <span class="co">## add for DiffBind 3.0</span>
+<span class="va">BLACKLIST</span> <span class="op">&lt;-</span> <span class="cn">FALSE</span> <span class="co">## fish data, no blacklist yet.</span>
+<span class="va">chip</span> <span class="op">&lt;-</span> <span class="fu">dba.blacklist</span><span class="op">(</span><span class="va">chip</span>, blacklist<span class="op">=</span><span class="va">BLACKLIST</span>, greylist<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span>
+<span class="va">chip</span> <span class="op">&lt;-</span> <span class="fu">dba.contrast</span><span class="op">(</span><span class="va">chip</span>, minMembers<span class="op">=</span><span class="fl">2</span>, categories <span class="op">=</span> <span class="va">DBA_CONDITION</span><span class="op">)</span>
+<span class="va">chip</span> <span class="op">&lt;-</span> <span class="fu">dba.analyze</span><span class="op">(</span><span class="va">chip</span>, bBlacklist <span class="op">=</span> <span class="cn">FALSE</span>, bGreylist <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
+<span class="va">chip.DB</span> <span class="op">&lt;-</span> <span class="fu">dba.report</span><span class="op">(</span><span class="va">chip</span>, th<span class="op">=</span><span class="fl">1</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">chip.DB</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/write.table.html" class="external-link">write.csv</a></span><span class="op">(</span><span class="va">chip.DB</span>, <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">pf</span>, <span class="st">"DiffBind.results.csv"</span><span class="op">)</span>, row.names<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
 </div>
 </div>
   </div>
