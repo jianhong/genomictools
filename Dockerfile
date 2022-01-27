@@ -67,12 +67,18 @@ RUN wget http://hgdownload.soe.ucsc.edu/admin/exe/linux.x86_64/bedGraphToBigWig 
 RUN Rscript -e  "BiocManager::install(c('biomaRt', 'dplyr', 'tximport', 'DESeq2', 'DiffBind', 'EnhancedVolcano'), suppressUpdates=TRUE, ask=FALSE)"
 #RUN Rscript -e  "BiocManager::install('pachterlab/sleuth', update = TRUE, ask=FALSE)"
 RUN Rscript -e  "BiocManager::install('jianhong/genomictools', update = TRUE, ask=FALSE)"
+RUN Rscript -e "BiocManager::install('rhdf5', update = FALSE, ask=FALSE)"
+RUN Rscript -e "BiocManager::install('gridExtra', update = FALSE, ask=FALSE)"
+RUN cd ~ && git clone https://github.com/pachterlab/sleuth && \
+    sed -i -e 's/importFrom.rhdf5.h5write.default.//' sleuth/NAMESPACE && \
+    Rscript -e "devtools::install('sleuth')"
 
 ## install phantompeakqualtools
 RUN git clone https://github.com/kundajelab/phantompeakqualtools && \
     Rscript -e "install.packages('phantompeakqualtools/spp_1.14.tar.gz')"
     
 RUN path="/usr/local/lib/R/site-library/basicBioinformaticsRNI2022/extdata" && \
+    rm -rf ~/sleuth && \
     cp -r $path/RNAseq /home/rstudio/ && \
     cp -r $path/ChIPseq /home/rstudio/
 

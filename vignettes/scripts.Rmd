@@ -164,6 +164,13 @@ t2g <- tx2gene("drerio")
 head(t2g, n=3)
 ```
 
+If you have trouble in downloading the data from ensembl, try to load the pre-saved
+object for the toy data.
+```{r, eval=FALSE}
+t2g <- readRDS(url("https://raw.githubusercontent.com/jianhong/genomictools/master/inst/extdata/t2g.rds"))
+head(t2g, n=3)
+```
+
 
 The following codes are using tximport to import the transcripts counts and
 aggregate to gene level. Downstream are using DESeq2 to do gene level DE analysis.
@@ -250,8 +257,9 @@ the alignment process.
 
 ```{bash, eval=FALSE}
 ## change you working directory
-ln -s /home/rstudio/ChIPseq /home/rstudio/data/ChIPseq
-cd /home/rstudio/data
+mkdir -p /home/rstudio/data/ChIPseq
+ln -s /home/rstudio/ChIPseq/fastq /home/rstudio/data/ChIPseq/
+cd /home/rstudio/data/ChIPseq
 ## download the zebrafish GRCz11 genome from ENSEMBLE
 wget ftp://ftp.ensembl.org/pub/release-105/fasta/danio_rerio/dna/Danio_rerio.GRCz11.dna.primary_assembly.fa.gz
 ## build the index
