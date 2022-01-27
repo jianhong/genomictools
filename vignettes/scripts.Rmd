@@ -298,7 +298,7 @@ do
 ## fastQC
 mkdir -p fastqc/${group[$i]}
 fastqc -o fastqc/${group[$i]} -t 2 \
-       ChIPseq/fastq/${tag[$i]}.fastq.gz
+       fastq/${tag[$i]}.fastq.gz
 ## trim adapter, need trim_galore be installed, here we do not do this step
 # mkdir -p fastq.trimmed
 # trim_galore -q 15 --fastqc -o fastq.trimmed/${group[$i]} fastq/${tag[$i]}.fastq.gz
@@ -310,7 +310,7 @@ mkdir -p sam
 ## >: save alignment to a SAM file
 ## 2>: save standard error to log file
 bwa mem -M -t 2 GRCz11.toy \
-           ChIPseq/fastq/${tag[$i]}.fastq.gz \
+           fastq/${tag[$i]}.fastq.gz \
            > sam/$prefix.$species.${tag[$i]}.sam \
            2> bwa.$prefix.$species.${tag[$i]}.log.txt
 
