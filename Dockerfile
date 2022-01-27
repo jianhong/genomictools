@@ -77,7 +77,7 @@ RUN path="/usr/local/lib/R/site-library/basicBioinformaticsRNI2022/extdata" && \
     cp -r $path/ChIPseq /home/rstudio/
 
 ## change the logger-type=stderr to syslog
-RUN sed -i 's/stderr/syslog/g' /etc/rstudio/logging.conf
+#RUN sed -i 's/stderr/syslog/g' /etc/rstudio/logging.conf
 
 # Define working directory.
 WORKDIR /home/rstudio
