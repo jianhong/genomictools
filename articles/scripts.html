@@ -292,7 +292,7 @@
 <span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="co">## fastQC</span></span>
 <span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> fastqc/<span class="va">${group</span><span class="op">[</span><span class="va">$i</span><span class="op">]</span><span class="va">}</span></span>
 <span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="ex">fastqc</span> <span class="at">-o</span> fastqc/<span class="va">${group</span><span class="op">[</span><span class="va">$i</span><span class="op">]</span><span class="va">}</span> <span class="at">-t</span> 2 <span class="dt">\</span></span>
-<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>       fastq/<span class="va">${tag</span><span class="op">[</span><span class="va">$i</span><span class="op">]</span><span class="va">}</span>.fastq.gz</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>       ChIPseq/fastq/<span class="va">${tag</span><span class="op">[</span><span class="va">$i</span><span class="op">]</span><span class="va">}</span>.fastq.gz</span>
 <span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a><span class="co">## trim adapter, need trim_galore be installed, here we do not do this step</span></span>
 <span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a><span class="co"># mkdir -p fastq.trimmed</span></span>
 <span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a><span class="co"># trim_galore -q 15 --fastqc -o fastq.trimmed/${group[$i]} fastq/${tag[$i]}.fastq.gz</span></span>
@@ -304,7 +304,7 @@
 <span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a><span class="co">## &gt;: save alignment to a SAM file</span></span>
 <span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a><span class="co">## 2&gt;: save standard error to log file</span></span>
 <span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a><span class="ex">bwa</span> mem <span class="at">-M</span> <span class="at">-t</span> 2 GRCz11.toy <span class="dt">\</span></span>
-<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a>           fastq/<span class="va">${tag</span><span class="op">[</span><span class="va">$i</span><span class="op">]</span><span class="va">}</span>.fastq.gz <span class="dt">\</span></span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a>           ChIPseq/fastq/<span class="va">${tag</span><span class="op">[</span><span class="va">$i</span><span class="op">]</span><span class="va">}</span>.fastq.gz <span class="dt">\</span></span>
 <span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a>           <span class="op">&gt;</span> sam/<span class="va">$prefix</span>.<span class="va">$species</span>.<span class="va">${tag</span><span class="op">[</span><span class="va">$i</span><span class="op">]</span><span class="va">}</span>.sam <span class="dt">\</span></span>
 <span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a>           <span class="dv">2</span><span class="op">&gt;</span> bwa.<span class="va">$prefix</span>.<span class="va">$species</span>.<span class="va">${tag</span><span class="op">[</span><span class="va">$i</span><span class="op">]</span><span class="va">}</span>.log.txt</span>
 <span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a></span>
