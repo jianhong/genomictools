@@ -44,8 +44,8 @@ And then run the following code in a terminal.
 ## set docker memory to > 5G ; !important
 cd ~
 mkdir tmp4genomictools
-docker run --user rstudio -e PASSWORD=123456 -p 8787:8787 \
-  -v ${PWD}/tmp4genomictools:/home/rstudio \
+docker run -e PASSWORD=123456 -p 8787:8787 \
+  -v ${PWD}/tmp4genomictools:/data \
   jianhong/genomictools:latest
 ```
 
@@ -68,13 +68,26 @@ cd RNAseq
 wget ftp://ftp.ensembl.org/pub/release-105/fasta/danio_rerio/cdna/Danio_rerio.GRCz11.cdna.all.fa.gz
 ```
 
-Now we can build the transcriptome index. It will take some time and memory. 
+Now we can build the transcriptome index. It will take some time and memory for full dataset. 
 This is the reason why we need to set docker memory to > 5G.
 
 ```{bash, eval=FALSE}
 kallisto index -i danRer.GRCz11_transcrits.idx Danio_rerio.GRCz11.cdna.all.fa.gz
 
 salmon index -i danRer.GRCz11_transcrits.salmon.idx -t Danio_rerio.GRCz11.cdna.all.fa.gz
+```
+
+The data are only a subset of the whole genome. We will only use genes in
+chromosome 4, 13, 16 and 21 to speed up the test run.
+```{bash, eval=FALSE}
+wget https://raw.githubusercontent.com/jianhong/genomictools/master/inst/extdata/Danio_rerio.GRCz11.cdna.toy.fa.gz
+```
+
+It will take several seconds to build the toy index.
+```{bash, eval=FALSE}
+kallisto index -i danRer.GRCz11_transcrits.toy.idx Danio_rerio.GRCz11.cdna.toy.fa.gz
+
+salmon index -i danRer.GRCz11_transcrits.toy.salmon.idx -t Danio_rerio.GRCz11.cdna.toy.fa.gz
 ```
 
 It's time for quantifying the FASTQ files against our Kallisto index and 
@@ -99,11 +112,11 @@ for rep in 1 2
 do
 for cond in Ablated Uninjured
 do
-kallisto quant -i danRer.GRCz11_transcrits.idx \
+kallisto quant -i danRer.GRCz11_transcrits.toy.idx \
                -o kallisto_quant/$cond.rep$rep \
                -b 30 -t 2 fastq/$cond.rep$rep.fastq.gz \
                --single -l 200 -s 50
-salmon quant -i danRer.GRCz11_transcrits.salmon.idx -l A \
+salmon quant -i danRer.GRCz11_transcrits.toy.salmon.idx -l A \
              -r fastq/$cond.rep$rep.fastq.gz \
              --validateMappings -p 2 \
              -o salmon_quant/$cond.rep$rep \
@@ -235,6 +248,14 @@ wget ftp://ftp.ensembl.org/pub/release-105/fasta/danio_rerio/dna/Danio_rerio.GRC
 bwa index -p GRCz11 Danio_rerio.GRCz11.dna.primary_assembly.fa.gz
 ```
 
+The data are only a subset of the whole genome. We will only use genes in
+chromosome 4, 13, 16 and 21 to speed up the test run.
+```{bash, eval=FALSE}
+wget https://raw.githubusercontent.com/jianhong/genomictools/master/inst/extdata/Danio_rerio.GRCz11.dna.toy.fa.gz
+bwa index -p GRCz11.toy Danio_rerio.GRCz11.dna.toy.fa.gz
+```
+
+
 ### Run fastQC, mapping and MACS2
 
 We will the scripts in a bash loop. The samples are from two uninjured 
@@ -268,7 +289,7 @@ mkdir -p sam
 ## -M: mark shorter split hits as secondary, this is optional for Picard compatibility.
 ## >: save alignment to a SAM file
 ## 2>: save standard error to log file
-bwa mem -M -t 2 GRCz11 \
+bwa mem -M -t 2 GRCz11.toy \
            fastq/${tag[$i]}.fastq.gz \
            > sam/$prefix.$species.${tag[$i]}.sam \
            2> bwa.$prefix.$species.${tag[$i]}.log.txt
@@ -304,8 +325,9 @@ mkdir -p macs2/${tag[$i]}
 ## -B: ask MACS2 to output bedGraph files for experiment.
 ## --nomodel --extsize 150: the subset data is not big enough (<1000 peak) for
 ## macs2 to generate a model. We manually feed one.
+## because we used toy genome, the genome size we set as 10M
 macs2 callpeak -t bam/${prefix}.$species.${tag[$i]}.srt.markDup.bam \
-               -f BAM -g 1.4e9 -n ${prefix}.$species.${tag[$i]} \
+               -f BAM -g 10e6 -n ${prefix}.$species.${tag[$i]} \
                --outdir macs2/${tag[$i]} -q 0.05 \
                -B --nomodel --extsize 150
 
