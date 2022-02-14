@@ -53,7 +53,7 @@ The ChIP-seq data will be analyzed with [bwa](http://bio-bwa.sourceforge.net/) +
 
 2. Learn how to understand the results of RNA-seq and ChIP-seq data
 
-3. Become aware the experiemental approaches and the limitation of the pipeline.
+3. Become aware the experimental approaches and the limitation of the pipeline.
 
 ## references:
 

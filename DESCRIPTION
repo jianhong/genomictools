@@ -1,6 +1,6 @@
 Package: basicBioinformaticsRNI2022
 Type: Package
-Version: 1.0.2
+Version: 1.0.3
 Title: RNI2022 basic bioinformatics
 Authors@R: person(given="Jianhong", family="Ou", email="jianhong.ou@duke.edu", 
         role=c("aut", "cre"), comment=c(ORCID="0000-0002-8652-2488"))
@@ -11,6 +11,6 @@ Description: This package serves as a container for basic bioinformatics RNI2022
 License: GPL (>= 2)
 Lazyload: yes
 URL: https://jianhong.github.io/genomictools
-BugReports: https://github.com/jianhong/genomictools/issues/new/choose
+BugReports: https://github.com/jianhong/genomictools/issues/new
 DockerImage: jianhong/genomictools:latest
 VignetteBuilder: knitr
