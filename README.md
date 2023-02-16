@@ -1,4 +1,4 @@
-# RNI2022 basic bioinformatics
+# DRC2023 basic bioinformatics
 
 ![.github/workflows/push_docker.yaml](https://github.com/jianhong/genomictools/workflows/.github/workflows/push_docker.yaml/badge.svg)
 

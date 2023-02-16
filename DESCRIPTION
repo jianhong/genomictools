@@ -1,7 +1,7 @@
-Package: basicBioinformaticsRNI2022
+Package: basicBioinformaticsDRC2023
 Type: Package
-Version: 1.0.3
-Title: RNI2022 basic bioinformatics
+Version: 1.0.4
+Title: DRC2023 basic bioinformatics
 Authors@R: person(given="Jianhong", family="Ou", email="jianhong.ou@duke.edu", 
         role=c("aut", "cre"), comment=c(ORCID="0000-0002-8652-2488"))
 Maintainer: Jianhong Ou <jianhong.ou@duke.edu>
