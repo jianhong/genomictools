@@ -342,13 +342,13 @@ bamCoverage -b bam/$prefix.$species.${tag[$i]}.srt.markDup.bam -o bw/$prefix.$sp
 mkdir -p macs2/${tag[$i]}
 ## -g: mappable genome size
 ## -q: use minimum FDR 0.05 cutoff to call significant regions.
-## -B: ask MACS2 to output bedGraph files for experiment.
+## -B: ask MACS3 to output bedGraph files for experiment.
 ## --nomodel --extsize 150: the subset data is not big enough (<1000 peak) for
-## macs2 to generate a model. We manually feed one.
+## macs3 to generate a model. We manually feed one.
 ## because we used toy genome, the genome size we set as 10M
-macs2 callpeak -t bam/${prefix}.$species.${tag[$i]}.srt.markDup.bam \
+macs3 callpeak -t bam/${prefix}.$species.${tag[$i]}.srt.markDup.bam \
                -f BAM -g 10e6 -n ${prefix}.$species.${tag[$i]} \
-               --outdir macs2/${tag[$i]} -q 0.05 \
+               --outdir macs3/${tag[$i]} -q 0.05 \
                -B --nomodel --extsize 150
 
 done
@@ -362,11 +362,11 @@ We will use `DiffBind` package to do the differential analysis.
 setwd("/home/rstudio/data/ChIPseq")
 library("DiffBind")
 (bams <- dir("bam", "markDup.bam$", full.names = TRUE))
-(Peaks <- dir("macs2", "narrowPeak$", full.names = TRUE, recursive = TRUE))
+(Peaks <- dir("macs3", "narrowPeak$", full.names = TRUE, recursive = TRUE))
 (SampleID <- basename(dirname(Peaks)))
 (Condition <- sub(".rep.", "", SampleID))
 (Replicate <- sub("^.*rep", "", SampleID))
-Peakcaller <- "macs2"
+Peakcaller <- "macs3"
 PeakFormat <- "narrowPeak"
 samples <- data.frame(SampleID=SampleID,
                       Condition=Condition,
