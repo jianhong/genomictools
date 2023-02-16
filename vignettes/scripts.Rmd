@@ -339,7 +339,7 @@ mkdir -p bw
 bamCoverage -b bam/$prefix.$species.${tag[$i]}.srt.markDup.bam -o bw/$prefix.$species.${tag[$i]}.bw --normalizeUsing CPM
 
 ## call peaks by macs2
-mkdir -p macs2/${tag[$i]}
+mkdir -p macs3/${tag[$i]}
 ## -g: mappable genome size
 ## -q: use minimum FDR 0.05 cutoff to call significant regions.
 ## -B: ask MACS3 to output bedGraph files for experiment.
