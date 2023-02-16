@@ -1,10 +1,10 @@
 #################################################################
-# Dockerfile to build bwa, kallisto, cufflinks, MACS2, samtools, 
+# Dockerfile to build bwa, kallisto, cufflinks, MACS3, samtools, 
 # picard-tools, fastQC, bedtools, cutadapt, R, ucsc genome tools
 # images
 # Based on Ubuntu
 #  $ cd genomicTools.docker
-#  $ VERSION=0.1.2
+#  $ VERSION=0.1.3
 #  $ docker build -t jianhong/genomictools:$VERSION .  ## --no-cache
 #  $ docker images jianhong/genomictools:$VERSION
 #  $ docker push jianhong/genomictools:$VERSION
@@ -17,7 +17,7 @@
 # ## then you can connect the rstudio with localhost:8787 by username: rstudio password:123456
 ##################################################################
 # Set the base image to Ubuntu
-FROM bioconductor/bioconductor_docker:RELEASE_3_14
+FROM bioconductor/bioconductor_docker:RELEASE_3_16
 
 # File/Author / Maintainer
 MAINTAINER Jianhong Ou <jianhong.ou@duke.edu>
@@ -36,8 +36,8 @@ RUN cd ~ && \
 RUN wget https://raw.githubusercontent.com/jianhong/chipseq/master/assets/picard -P /usr/bin/ && \
     chmod +x /usr/bin/picard
 
-## install deeptools, MACS2, ...
-RUN pip install deeptools MACS2
+## install deeptools, MACS3, ...
+RUN pip install deeptools MACS3
 
 ## install homer
 RUN mkdir /homer && cd /homer && \
@@ -52,10 +52,10 @@ RUN cd ~ && wget https://raw.githubusercontent.com/gbcs-embl/Je/master/dist/je_2
     cp * /usr/local/sbin/ && cd .. && rm -rf je*
 
 ## install TrimGalore
-RUN wget https://github.com/FelixKrueger/TrimGalore/archive/0.6.6.tar.gz && \
-    tar -xf 0.6.6.tar.gz && cd TrimGalore-0.6.6 && \
+RUN wget https://github.com/FelixKrueger/TrimGalore/archive/refs/tags/0.6.10.tar.gz && \
+    tar -xf 0.6.10.tar.gz && cd TrimGalore-0.6.10 && \
     cp trim_galore /usr/local/sbin/ && cd .. && \
-    rm 0.6.6.tar.gz && rm -rf TrimGalore-0.6.6
+    rm 0.6.10.tar.gz && rm -rf TrimGalore-0.6.10
 
 ## install ucsc tools: bedGraphToBigWig, bedToBigBed
 RUN wget http://hgdownload.soe.ucsc.edu/admin/exe/linux.x86_64/bedGraphToBigWig && \
@@ -66,7 +66,6 @@ RUN wget http://hgdownload.soe.ucsc.edu/admin/exe/linux.x86_64/bedGraphToBigWig 
 ## Install Bioconductor
 RUN Rscript -e  "BiocManager::install(c('biomaRt', 'dplyr', 'tximport', 'DESeq2', 'DiffBind', 'EnhancedVolcano'), suppressUpdates=TRUE, ask=FALSE)"
 #RUN Rscript -e  "BiocManager::install('pachterlab/sleuth', update = TRUE, ask=FALSE)"
-RUN Rscript -e  "BiocManager::install('jianhong/genomictools', update = TRUE, ask=FALSE)"
 RUN Rscript -e "BiocManager::install('rhdf5', update = FALSE, ask=FALSE)"
 RUN Rscript -e "BiocManager::install('gridExtra', update = FALSE, ask=FALSE)"
 RUN cd ~ && git clone https://github.com/pachterlab/sleuth && \
@@ -76,8 +75,9 @@ RUN cd ~ && git clone https://github.com/pachterlab/sleuth && \
 ## install phantompeakqualtools
 RUN git clone https://github.com/kundajelab/phantompeakqualtools && \
     Rscript -e "install.packages('phantompeakqualtools/spp_1.14.tar.gz')"
-    
-RUN path="/usr/local/lib/R/site-library/basicBioinformaticsRNI2022/extdata" && \
+
+RUN Rscript -e  "BiocManager::install('jianhong/genomictools', update = TRUE, ask=FALSE)"
+RUN path="/usr/local/lib/R/site-library/basicBioinformaticsDRC2023/extdata" && \
     rm -rf ~/sleuth && \
     cp -r $path/RNAseq /home/rstudio/ && \
     cp -r $path/ChIPseq /home/rstudio/
