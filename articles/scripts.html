@@ -49,7 +49,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -81,8 +81,10 @@
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>Scripts for RNA-seq and ChIP-seq analysis primer</h1>
-                        <h4 data-toc-skip class="author">Jianhong Ou</h4>
+      <h1 data-toc-skip>Scripts for RNA-seq and ChIP-seq analysis
+primer</h1>
+                        <h4 data-toc-skip class="author">Jianhong
+Ou</h4>
             
       
       <small class="dont-index">Source: <a href="https://github.com/jianhong/genomictools/blob/HEAD/vignettes/scripts.Rmd" class="external-link"><code>vignettes/scripts.Rmd</code></a></small>
@@ -96,7 +98,8 @@
 <h2 id="learning-objectives">Learning Objectives:<a class="anchor" aria-label="anchor" href="#learning-objectives"></a>
 </h2>
 <ol style="list-style-type: decimal">
-<li><p>pipeline: kallisto and Salmon + tximport + DESeq2 for RNA-seq</p></li>
+<li><p>pipeline: kallisto and Salmon + tximport + DESeq2 for
+RNA-seq</p></li>
 <li><p>pipeline: bwa + MACS2 for ChIP-seq</p></li>
 </ol>
 <p>For more information please refer to the <a href="https://github.com/jianhong/genomictools/blob/master/inst/extdata/BasicBioinformaticsRNAseqChIPseqPrimer.pdf" class="external-link">slides</a></p>
@@ -105,14 +108,19 @@
 <h2 id="set-up">Set-up<a class="anchor" aria-label="anchor" href="#set-up"></a>
 </h2>
 <p>All the materials used in this workshop is included in <a href="https://www.docker.com/" class="external-link">Docker</a> file: <a href="https://hub.docker.com/repository/docker/jianhong/genomictools" class="external-link">jianhong/genomictools</a></p>
-<p>Before we start, please download Docker and install Docker Desktop.</p>
+<p>Before we start, please download Docker and install Docker
+Desktop.</p>
 <div class="section level3">
 <h3 id="install-docker">Install docker<a class="anchor" aria-label="anchor" href="#install-docker"></a>
 </h3>
-<p>Once the docker installed on you system, please try to run the following code in a terminal. This script will get the latest version of docker container for this workshop.</p>
+<p>Once the docker installed on you system, please try to run the
+following code in a terminal. This script will get the latest version of
+docker container for this workshop.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">which</span> docker</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> pull jianhong/genomictools:latest</span></code></pre></div>
-<p>Change the docker Memory Resources to &gt;= 5G in the Preferences setting page of Docker. And then run the following code in a terminal.</p>
+<p>Change the docker Memory Resources to &gt;= 5G in the Preferences
+setting page of Docker. And then run the following code in a
+terminal.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">## set docker memory to &gt; 5G</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co">## set docker memory to &gt; 5G ; !important</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">## RStudio server will not work for M1 chip MacBook.</span></span>
@@ -121,21 +129,31 @@
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">--memory</span> 5g <span class="at">-e</span> PASSWORD=123456 <span class="at">-p</span> 8787:8787 <span class="dt">\</span></span>
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">-v</span> <span class="va">${PWD}</span>/tmp4genomictools:/home/rstudio/data <span class="dt">\</span></span>
 <span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  jianhong/genomictools:latest</span></code></pre></div>
-<p>“docker run” will open port 8787 on your system. Now you can login rstudio in the container at <a href="http://localhost:8787" class="external-link uri">http://localhost:8787</a> with username “rstudio” and password “123456”. All the following steps are running in Rstudio “Terminal” or “Console”.</p>
+<p>“docker run” will open port 8787 on your system. Now you can login
+rstudio in the container at <a href="http://localhost:8787" class="external-link uri">http://localhost:8787</a> with username “rstudio” and
+password “123456”. All the following steps are running in Rstudio
+“Terminal” or “Console”.</p>
 </div>
 </div>
 <div class="section level2">
 <h2 id="run-kallisto-and-salmon-for-rna-seq">Run kallisto and Salmon for RNA-seq<a class="anchor" aria-label="anchor" href="#run-kallisto-and-salmon-for-rna-seq"></a>
 </h2>
-<p>The sample files are packaged in basicBioinformaticsRNI2022 package and Docker container.</p>
-<p>Now we will download the zebrafish cDNA files from ENSEMBL in order to build the Kallisto and Salmon transcript index. If you are doing rRNA depletion library, please download and merge the cDNA and ncDNA files from ENSEMBL to make the full transcriptome.</p>
+<p>The sample files are packaged in basicBioinformaticsRNI2022 package
+and Docker container.</p>
+<p>Now we will download the zebrafish cDNA files from ENSEMBL in order
+to build the Kallisto and Salmon transcript index. If you are doing rRNA
+depletion library, please download and merge the cDNA and ncDNA files
+from ENSEMBL to make the full transcriptome.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> RNAseq</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">wget</span> ftp://ftp.ensembl.org/pub/release-105/fasta/danio_rerio/cdna/Danio_rerio.GRCz11.cdna.all.fa.gz</span></code></pre></div>
-<p>Now we can build the transcriptome index. It will take some time and memory for full dataset. This is the reason why we need to set docker memory to &gt; 5G.</p>
+<p>Now we can build the transcriptome index. It will take some time and
+memory for full dataset. This is the reason why we need to set docker
+memory to &gt; 5G.</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">kallisto</span> index <span class="at">-i</span> danRer.GRCz11_transcrits.idx Danio_rerio.GRCz11.cdna.all.fa.gz</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="ex">salmon</span> index <span class="at">-i</span> danRer.GRCz11_transcrits.salmon.idx <span class="at">-t</span> Danio_rerio.GRCz11.cdna.all.fa.gz</span></code></pre></div>
-<p>The data are only a subset of the whole genome. We will only use genes in chromosome 4, 13, 16 and 21 to speed up the test run.</p>
+<p>The data are only a subset of the whole genome. We will only use
+genes in chromosome 4, 13, 16 and 21 to speed up the test run.</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> data/RNAseq</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> data/RNAseq</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">wget</span> https://raw.githubusercontent.com/jianhong/genomictools/master/inst/extdata/Danio_rerio.GRCz11.cdna.toy.fa.gz</span></code></pre></div>
@@ -143,10 +161,16 @@
 <div class="sourceCode" id="cb6"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">kallisto</span> index <span class="at">-i</span> danRer.GRCz11_transcrits.toy.idx Danio_rerio.GRCz11.cdna.toy.fa.gz</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="ex">salmon</span> index <span class="at">-i</span> danRer.GRCz11_transcrits.toy.salmon.idx <span class="at">-t</span> Danio_rerio.GRCz11.cdna.toy.fa.gz</span></code></pre></div>
-<p>It’s time for quantifying the FASTQ files against our Kallisto index and Salmon index. We run both of them for comparison. For real data, you can select one of them.</p>
-<p>Because our FASTQ files are single end reads, we need to set –single for kallisto. And we also need to give the fragment length and standard error of the length for kallisto.</p>
+<p>It’s time for quantifying the FASTQ files against our Kallisto index
+and Salmon index. We run both of them for comparison. For real data, you
+can select one of them.</p>
+<p>Because our FASTQ files are single end reads, we need to set –single
+for kallisto. And we also need to give the fragment length and standard
+error of the length for kallisto.</p>
 <p>For Salmon, now we can set library type to “A”.</p>
-<p>In this example, we put “-t 2” and “-p 2” so we can use up to two processors in the bootstrapping. We set the bootstrapping by “-b 30” and “–numBootstraps 30”.</p>
+<p>In this example, we put “-t 2” and “-p 2” so we can use up to two
+processors in the bootstrapping. We set the bootstrapping by “-b 30” and
+“–numBootstraps 30”.</p>
 <p>It will take several minutes for the sample data.</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># the toy RNAseq data is saved in /home/rstudio/RNAseq folder</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co"># create a link to current folder</span></span>
@@ -174,93 +198,100 @@
 <div class="section level2">
 <h2 id="r-scripts-for-rnaseq">R scripts for RNAseq<a class="anchor" aria-label="anchor" href="#r-scripts-for-rnaseq"></a>
 </h2>
-<p>Here we give an example workflow for a differential expression (DE) analysis. The following code should be run in Console of Rstudio.</p>
+<p>Here we give an example workflow for a differential expression (DE)
+analysis. The following code should be run in Console of Rstudio.</p>
 <div class="section level3">
 <h3 id="prepare-the-transcripts-to-genes-map-table">prepare the transcripts to genes map table<a class="anchor" aria-label="anchor" href="#prepare-the-transcripts-to-genes-map-table"></a>
 </h3>
-<p>We are trying to do gene level DE analysis. We need to aggregate the transcript level counts to gene level. We borrowed from the Sleuth documentation by retrieve ENSEMBL transcript id to gene id.</p>
+<p>We are trying to do gene level DE analysis. We need to aggregate the
+transcript level counts to gene level. We borrowed from the Sleuth
+documentation by retrieve ENSEMBL transcript id to gene id.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">setwd</a></span><span class="op">(</span><span class="st">"data/RNAseq"</span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">biomaRt</span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span>
-<span class="va">tx2gene</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">species</span><span class="op">=</span><span class="st">"hsapiens"</span>, <span class="va">...</span><span class="op">)</span><span class="op">{</span>
-  <span class="va">mart</span> <span class="op">&lt;-</span> <span class="fu">biomaRt</span><span class="fu">::</span><span class="fu">useMart</span><span class="op">(</span>biomart <span class="op">=</span> <span class="st">"ensembl"</span>, 
-                           dataset <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">species</span>, <span class="st">"_gene_ensembl"</span><span class="op">)</span>, <span class="va">...</span><span class="op">)</span>
-  <span class="va">t2g</span> <span class="op">&lt;-</span> <span class="fu">biomaRt</span><span class="fu">::</span><span class="fu">getBM</span><span class="op">(</span>attributes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ensembl_transcript_id"</span>, 
-                                       <span class="st">"ensembl_gene_id"</span>,
-                                       <span class="st">"external_gene_name"</span><span class="op">)</span>, mart <span class="op">=</span> <span class="va">mart</span><span class="op">)</span>
-  <span class="va">t2g</span> <span class="op">&lt;-</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename</a></span><span class="op">(</span><span class="va">t2g</span>, target_id <span class="op">=</span> <span class="va">ensembl_transcript_id</span>,
-                       ens_gene <span class="op">=</span> <span class="va">ensembl_gene_id</span>, ext_gene <span class="op">=</span> <span class="va">external_gene_name</span><span class="op">)</span>
-  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">t2g</span><span class="op">)</span>
-<span class="op">}</span>
-
-<span class="va">t2g</span> <span class="op">&lt;-</span> <span class="fu">tx2gene</span><span class="op">(</span><span class="st">"drerio"</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">t2g</span>, n<span class="op">=</span><span class="fl">3</span><span class="op">)</span></code></pre></div>
-<p>If you have trouble in downloading the data from ensembl, try to load the pre-saved object for the toy data.</p>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">setwd</a></span><span class="op">(</span><span class="st">"data/RNAseq"</span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">biomaRt</span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
+<span><span class="va">tx2gene</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">species</span><span class="op">=</span><span class="st">"hsapiens"</span>, <span class="va">...</span><span class="op">)</span><span class="op">{</span></span>
+<span>  <span class="va">mart</span> <span class="op">&lt;-</span> <span class="fu">biomaRt</span><span class="fu">::</span><span class="fu">useMart</span><span class="op">(</span>biomart <span class="op">=</span> <span class="st">"ensembl"</span>, </span>
+<span>                           dataset <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">species</span>, <span class="st">"_gene_ensembl"</span><span class="op">)</span>, <span class="va">...</span><span class="op">)</span></span>
+<span>  <span class="va">t2g</span> <span class="op">&lt;-</span> <span class="fu">biomaRt</span><span class="fu">::</span><span class="fu">getBM</span><span class="op">(</span>attributes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ensembl_transcript_id"</span>, </span>
+<span>                                       <span class="st">"ensembl_gene_id"</span>,</span>
+<span>                                       <span class="st">"external_gene_name"</span><span class="op">)</span>, mart <span class="op">=</span> <span class="va">mart</span><span class="op">)</span></span>
+<span>  <span class="va">t2g</span> <span class="op">&lt;-</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename</a></span><span class="op">(</span><span class="va">t2g</span>, target_id <span class="op">=</span> <span class="va">ensembl_transcript_id</span>,</span>
+<span>                       ens_gene <span class="op">=</span> <span class="va">ensembl_gene_id</span>, ext_gene <span class="op">=</span> <span class="va">external_gene_name</span><span class="op">)</span></span>
+<span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">t2g</span><span class="op">)</span></span>
+<span><span class="op">}</span></span>
+<span></span>
+<span><span class="va">t2g</span> <span class="op">&lt;-</span> <span class="fu">tx2gene</span><span class="op">(</span><span class="st">"drerio"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">t2g</span>, n<span class="op">=</span><span class="fl">3</span><span class="op">)</span></span></code></pre></div>
+<p>If you have trouble in downloading the data from ensembl, try to load
+the pre-saved object for the toy data.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">t2g</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/connections.html" class="external-link">url</a></span><span class="op">(</span><span class="st">"https://raw.githubusercontent.com/jianhong/genomictools/master/inst/extdata/t2g.rds"</span><span class="op">)</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">t2g</span>, n<span class="op">=</span><span class="fl">3</span><span class="op">)</span></code></pre></div>
-<p>The following codes are using tximport to import the transcripts counts and aggregate to gene level. Downstream are using DESeq2 to do gene level DE analysis.</p>
+<code class="sourceCode R"><span><span class="va">t2g</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/connections.html" class="external-link">url</a></span><span class="op">(</span><span class="st">"https://raw.githubusercontent.com/jianhong/genomictools/master/inst/extdata/t2g.rds"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">t2g</span>, n<span class="op">=</span><span class="fl">3</span><span class="op">)</span></span></code></pre></div>
+<p>The following codes are using tximport to import the transcripts
+counts and aggregate to gene level. Downstream are using DESeq2 to do
+gene level DE analysis.</p>
 </div>
 <div class="section level3">
 <h3 id="run-tximport-deseq2-for-salmon-results">run tximport + DESeq2 for Salmon results<a class="anchor" aria-label="anchor" href="#run-tximport-deseq2-for-salmon-results"></a>
 </h3>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">tximport</span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">DESeq2</span><span class="op">)</span>
-
-<span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">setwd</a></span><span class="op">(</span><span class="st">"RNAseq/"</span><span class="op">)</span> <span class="co">## RNAseq is the folder where saved the salmon_quant and kallisto_quant</span>
-<span class="op">(</span><span class="va">salmon_files</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.files.html" class="external-link">dir</a></span><span class="op">(</span><span class="st">"salmon_quant"</span>, <span class="st">"sf$"</span>, 
-                     recursive <span class="op">=</span> <span class="cn">TRUE</span>, 
-                     full.names <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>
-
-<span class="va">txi.salmon</span> <span class="op">&lt;-</span> <span class="fu">tximport</span><span class="op">(</span><span class="va">salmon_files</span>, type <span class="op">=</span> <span class="st">"salmon"</span>, 
-                       tx2gene <span class="op">=</span> <span class="va">t2g</span>, ignoreTxVersion<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>
-
-<span class="va">sampleTable</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>condition <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">sub</a></span><span class="op">(</span><span class="st">".rep."</span>, <span class="st">""</span>, 
-                                          <span class="fu"><a href="https://rdrr.io/r/base/basename.html" class="external-link">basename</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/basename.html" class="external-link">dirname</a></span><span class="op">(</span><span class="va">salmon_files</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">sampleTable</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">txi.salmon</span><span class="op">$</span><span class="va">counts</span><span class="op">)</span>
-<span class="va">dds.salmon</span> <span class="op">&lt;-</span> <span class="fu">DESeqDataSetFromTximport</span><span class="op">(</span><span class="va">txi.salmon</span>, <span class="va">sampleTable</span>, <span class="op">~</span><span class="va">condition</span><span class="op">)</span>
-<span class="va">dds.salmon</span> <span class="op">&lt;-</span> <span class="fu">DESeq</span><span class="op">(</span><span class="va">dds.salmon</span><span class="op">)</span>
-<span class="va">res.salmon</span> <span class="op">&lt;-</span> <span class="fu">results</span><span class="op">(</span><span class="va">dds.salmon</span><span class="op">)</span>
-<span class="va">res.salmon</span><span class="op">[</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">res.salmon</span><span class="op">$</span><span class="va">padj</span><span class="op">)</span>, <span class="op">]</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">tximport</span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">DESeq2</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">setwd</a></span><span class="op">(</span><span class="st">"RNAseq/"</span><span class="op">)</span> <span class="co">## RNAseq is the folder where saved the salmon_quant and kallisto_quant</span></span>
+<span><span class="op">(</span><span class="va">salmon_files</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.files.html" class="external-link">dir</a></span><span class="op">(</span><span class="st">"salmon_quant"</span>, <span class="st">"sf$"</span>, </span>
+<span>                     recursive <span class="op">=</span> <span class="cn">TRUE</span>, </span>
+<span>                     full.names <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">txi.salmon</span> <span class="op">&lt;-</span> <span class="fu">tximport</span><span class="op">(</span><span class="va">salmon_files</span>, type <span class="op">=</span> <span class="st">"salmon"</span>, </span>
+<span>                       tx2gene <span class="op">=</span> <span class="va">t2g</span>, ignoreTxVersion<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">sampleTable</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>condition <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">sub</a></span><span class="op">(</span><span class="st">".rep."</span>, <span class="st">""</span>, </span>
+<span>                                          <span class="fu"><a href="https://rdrr.io/r/base/basename.html" class="external-link">basename</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/basename.html" class="external-link">dirname</a></span><span class="op">(</span><span class="va">salmon_files</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">sampleTable</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">txi.salmon</span><span class="op">$</span><span class="va">counts</span><span class="op">)</span></span>
+<span><span class="va">dds.salmon</span> <span class="op">&lt;-</span> <span class="fu">DESeqDataSetFromTximport</span><span class="op">(</span><span class="va">txi.salmon</span>, <span class="va">sampleTable</span>, <span class="op">~</span><span class="va">condition</span><span class="op">)</span></span>
+<span><span class="va">dds.salmon</span> <span class="op">&lt;-</span> <span class="fu">DESeq</span><span class="op">(</span><span class="va">dds.salmon</span><span class="op">)</span></span>
+<span><span class="va">res.salmon</span> <span class="op">&lt;-</span> <span class="fu">results</span><span class="op">(</span><span class="va">dds.salmon</span><span class="op">)</span></span>
+<span><span class="va">res.salmon</span><span class="op">[</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">res.salmon</span><span class="op">$</span><span class="va">padj</span><span class="op">)</span>, <span class="op">]</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="run-tximport-deseq2-for-kallisto-results">run tximport + DESeq2 for kallisto results<a class="anchor" aria-label="anchor" href="#run-tximport-deseq2-for-kallisto-results"></a>
 </h3>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="op">(</span><span class="va">kallisto_files</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.files.html" class="external-link">dir</a></span><span class="op">(</span><span class="st">"kallisto_quant"</span>, <span class="st">"abundance.h5"</span>, 
-                       recursive <span class="op">=</span> <span class="cn">TRUE</span>, full.names <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>
-
-<span class="va">txi.kallisto</span> <span class="op">&lt;-</span> <span class="fu">tximport</span><span class="op">(</span><span class="va">kallisto_files</span>, type <span class="op">=</span> <span class="st">"kallisto"</span>, 
-                         tx2gene <span class="op">=</span> <span class="va">t2g</span>, ignoreTxVersion<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>
-
-<span class="va">sampleTable</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>condition <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">sub</a></span><span class="op">(</span><span class="st">".rep."</span>, <span class="st">""</span>, 
-                                          <span class="fu"><a href="https://rdrr.io/r/base/basename.html" class="external-link">basename</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/basename.html" class="external-link">dirname</a></span><span class="op">(</span><span class="va">kallisto_files</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">sampleTable</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">txi.kallisto</span><span class="op">$</span><span class="va">counts</span><span class="op">)</span>
-<span class="va">dds.kallisto</span> <span class="op">&lt;-</span> <span class="fu">DESeqDataSetFromTximport</span><span class="op">(</span><span class="va">txi.kallisto</span>, 
-                                         <span class="va">sampleTable</span>, <span class="op">~</span><span class="va">condition</span><span class="op">)</span>
-<span class="va">dds.kallisto</span> <span class="op">&lt;-</span> <span class="fu">DESeq</span><span class="op">(</span><span class="va">dds.kallisto</span><span class="op">)</span>
-<span class="va">res.kallisto</span> <span class="op">&lt;-</span> <span class="fu">results</span><span class="op">(</span><span class="va">dds.kallisto</span><span class="op">)</span>
-<span class="va">res.kallisto</span><span class="op">[</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">res.kallisto</span><span class="op">$</span><span class="va">padj</span><span class="op">)</span>, <span class="op">]</span></code></pre></div>
+<code class="sourceCode R"><span><span class="op">(</span><span class="va">kallisto_files</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.files.html" class="external-link">dir</a></span><span class="op">(</span><span class="st">"kallisto_quant"</span>, <span class="st">"abundance.h5"</span>, </span>
+<span>                       recursive <span class="op">=</span> <span class="cn">TRUE</span>, full.names <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">txi.kallisto</span> <span class="op">&lt;-</span> <span class="fu">tximport</span><span class="op">(</span><span class="va">kallisto_files</span>, type <span class="op">=</span> <span class="st">"kallisto"</span>, </span>
+<span>                         tx2gene <span class="op">=</span> <span class="va">t2g</span>, ignoreTxVersion<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">sampleTable</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>condition <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">sub</a></span><span class="op">(</span><span class="st">".rep."</span>, <span class="st">""</span>, </span>
+<span>                                          <span class="fu"><a href="https://rdrr.io/r/base/basename.html" class="external-link">basename</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/basename.html" class="external-link">dirname</a></span><span class="op">(</span><span class="va">kallisto_files</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">sampleTable</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">txi.kallisto</span><span class="op">$</span><span class="va">counts</span><span class="op">)</span></span>
+<span><span class="va">dds.kallisto</span> <span class="op">&lt;-</span> <span class="fu">DESeqDataSetFromTximport</span><span class="op">(</span><span class="va">txi.kallisto</span>, </span>
+<span>                                         <span class="va">sampleTable</span>, <span class="op">~</span><span class="va">condition</span><span class="op">)</span></span>
+<span><span class="va">dds.kallisto</span> <span class="op">&lt;-</span> <span class="fu">DESeq</span><span class="op">(</span><span class="va">dds.kallisto</span><span class="op">)</span></span>
+<span><span class="va">res.kallisto</span> <span class="op">&lt;-</span> <span class="fu">results</span><span class="op">(</span><span class="va">dds.kallisto</span><span class="op">)</span></span>
+<span><span class="va">res.kallisto</span><span class="op">[</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">res.kallisto</span><span class="op">$</span><span class="va">padj</span><span class="op">)</span>, <span class="op">]</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="run-sleuth">run Sleuth<a class="anchor" aria-label="anchor" href="#run-sleuth"></a>
 </h3>
-<p>The following code is showing how to use sleuth to do DE analysis. However, the sleuth package is not updated. It may be broken.</p>
+<p>The following code is showing how to use sleuth to do DE analysis.
+However, the sleuth package is not updated. It may be broken.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co">#BiocManager::install("pachterlab/sleuth")</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">sleuth</span><span class="op">)</span>
-<span class="va">samples</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.files.html" class="external-link">dir</a></span><span class="op">(</span><span class="st">"kallisto_quant"</span><span class="op">)</span>
-<span class="va">s2c</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>path<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.files.html" class="external-link">dir</a></span><span class="op">(</span><span class="st">"kallisto_quant"</span>, full.names <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, 
-                  sample<span class="op">=</span><span class="va">samples</span>, 
-                  condition<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">sub</a></span><span class="op">(</span><span class="st">".rep."</span>, <span class="st">""</span>, <span class="va">samples</span><span class="op">)</span><span class="op">)</span>
-<span class="va">s2c</span>
-<span class="va">so</span> <span class="op">&lt;-</span> <span class="fu">sleuth_prep</span><span class="op">(</span><span class="va">s2c</span>, <span class="op">~</span><span class="op">-</span><span class="fl">1</span><span class="op">+</span><span class="va">condition</span>, target_mapping <span class="op">=</span> <span class="va">t2g</span><span class="op">)</span>
-<span class="va">so</span> <span class="op">&lt;-</span> <span class="fu">sleuth_fit</span><span class="op">(</span><span class="va">so</span><span class="op">)</span>
-<span class="co">## which_beta must be in the colname of design table.</span>
-<span class="va">so</span> <span class="op">&lt;-</span> <span class="fu">sleuth_wt</span><span class="op">(</span><span class="va">so</span>, which_beta <span class="op">=</span> <span class="st">"conditionAblated"</span><span class="op">)</span>
-<span class="fu">sleuth_live</span><span class="op">(</span><span class="va">so</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co">#BiocManager::install("pachterlab/sleuth")</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">sleuth</span><span class="op">)</span></span>
+<span><span class="va">samples</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.files.html" class="external-link">dir</a></span><span class="op">(</span><span class="st">"kallisto_quant"</span><span class="op">)</span></span>
+<span><span class="va">s2c</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>path<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.files.html" class="external-link">dir</a></span><span class="op">(</span><span class="st">"kallisto_quant"</span>, full.names <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, </span>
+<span>                  sample<span class="op">=</span><span class="va">samples</span>, </span>
+<span>                  condition<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">sub</a></span><span class="op">(</span><span class="st">".rep."</span>, <span class="st">""</span>, <span class="va">samples</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">s2c</span></span>
+<span><span class="va">so</span> <span class="op">&lt;-</span> <span class="fu">sleuth_prep</span><span class="op">(</span><span class="va">s2c</span>, <span class="op">~</span><span class="op">-</span><span class="fl">1</span><span class="op">+</span><span class="va">condition</span>, target_mapping <span class="op">=</span> <span class="va">t2g</span><span class="op">)</span></span>
+<span><span class="va">so</span> <span class="op">&lt;-</span> <span class="fu">sleuth_fit</span><span class="op">(</span><span class="va">so</span><span class="op">)</span></span>
+<span><span class="co">## which_beta must be in the colname of design table.</span></span>
+<span><span class="va">so</span> <span class="op">&lt;-</span> <span class="fu">sleuth_wt</span><span class="op">(</span><span class="va">so</span>, which_beta <span class="op">=</span> <span class="st">"conditionAblated"</span><span class="op">)</span></span>
+<span><span class="fu">sleuth_live</span><span class="op">(</span><span class="va">so</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
@@ -270,8 +301,16 @@
 <h3 id="prepare-index-file-for-bwa">prepare index file for bwa<a class="anchor" aria-label="anchor" href="#prepare-index-file-for-bwa"></a>
 </h3>
 <p>Run following code in Terminal panel of rstudio.</p>
-<p>The sample data is located at “/home/rstudio/ChIPseq” folder. It is zebrafish H3 ChIP-seq data.</p>
-<p>We will map the reads by BWA (Burrows-Wheeler Aligner). Compare to Bowtie2, BWA is a little slower but a bit more accurate and provides information on which alignments are trustworthy. The bwa-mem mode is generally recommended for high-quality queries. It is not limited by sequence reads size as bwa-backtrack and bwa-sw. Aligning reads with bwa-mem, there are two steps, build the index and do alignment. BWA indexes the genome with an FM index based on the Burrows-Wheeler Transform to keep memory requirements low for the alignment process.</p>
+<p>The sample data is located at “/home/rstudio/ChIPseq” folder. It is
+zebrafish H3 ChIP-seq data.</p>
+<p>We will map the reads by BWA (Burrows-Wheeler Aligner). Compare to
+Bowtie2, BWA is a little slower but a bit more accurate and provides
+information on which alignments are trustworthy. The bwa-mem mode is
+generally recommended for high-quality queries. It is not limited by
+sequence reads size as bwa-backtrack and bwa-sw. Aligning reads with
+bwa-mem, there are two steps, build the index and do alignment. BWA
+indexes the genome with an FM index based on the Burrows-Wheeler
+Transform to keep memory requirements low for the alignment process.</p>
 <div class="sourceCode" id="cb13"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co">## change you working directory</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> /home/rstudio/data/ChIPseq</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ln</span> <span class="at">-s</span> /home/rstudio/ChIPseq/fastq /home/rstudio/data/ChIPseq/</span>
@@ -281,7 +320,8 @@
 <span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="co">## build the index</span></span>
 <span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="co">## -p: prefix for all index files</span></span>
 <span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="ex">bwa</span> index <span class="at">-p</span> GRCz11 Danio_rerio.GRCz11.dna.primary_assembly.fa.gz</span></code></pre></div>
-<p>The data are only a subset of the whole genome. We will only use genes in chromosome 4, 13, 16 and 21 to speed up the test run.</p>
+<p>The data are only a subset of the whole genome. We will only use
+genes in chromosome 4, 13, 16 and 21 to speed up the test run.</p>
 <div class="sourceCode" id="cb14"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">wget</span> https://raw.githubusercontent.com/jianhong/genomictools/master/inst/extdata/Danio_rerio.GRCz11.dna.toy.fa.gz</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="co">## the following step will take about 3min</span></span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="ex">bwa</span> index <span class="at">-p</span> GRCz11.toy Danio_rerio.GRCz11.dna.toy.fa.gz</span></code></pre></div>
@@ -289,7 +329,13 @@
 <div class="section level3">
 <h3 id="run-fastqc-mapping-and-macs2">Run fastQC, mapping and MACS2<a class="anchor" aria-label="anchor" href="#run-fastqc-mapping-and-macs2"></a>
 </h3>
-<p>We will run the scripts in a bash loop. The samples are from two uninjured and two ablated fish heart tissue. We use fastQC to check the quality of raw reads. The results will saved to “fastqc” folder. You can go through the results by click the index.html file in each sub-folder. We will perform alignment on the single-end reads. For more information on BWA and its functionality please refer to the <a href="http://bio-bwa.sourceforge.net/bwa.shtml" class="external-link">user manual</a>. <a href="https://github.com/macs3-project/MACS" class="external-link">MACS2</a> will be used to call the peaks.</p>
+<p>We will run the scripts in a bash loop. The samples are from two
+uninjured and two ablated fish heart tissue. We use fastQC to check the
+quality of raw reads. The results will saved to “fastqc” folder. You can
+go through the results by click the index.html file in each sub-folder.
+We will perform alignment on the single-end reads. For more information
+on BWA and its functionality please refer to the <a href="http://bio-bwa.sourceforge.net/bwa.shtml" class="external-link">user manual</a>. <a href="https://github.com/macs3-project/MACS" class="external-link">MACS2</a> will be used to
+call the peaks.</p>
 <div class="sourceCode" id="cb15"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="va">group</span><span class="op">=</span><span class="va">(</span>Ablated Ablated Uninjured Uninjured<span class="va">)</span></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="va">tag</span><span class="op">=</span><span class="va">(</span>Ablated.rep1 Ablated.rep2 Uninjured.rep1 Uninjured.rep2<span class="va">)</span></span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="va">species</span><span class="op">=</span>danRer11</span>
@@ -344,13 +390,13 @@
 <span id="cb15-52"><a href="#cb15-52" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> macs2/<span class="va">${tag</span><span class="op">[</span><span class="va">$i</span><span class="op">]</span><span class="va">}</span></span>
 <span id="cb15-53"><a href="#cb15-53" aria-hidden="true" tabindex="-1"></a><span class="co">## -g: mappable genome size</span></span>
 <span id="cb15-54"><a href="#cb15-54" aria-hidden="true" tabindex="-1"></a><span class="co">## -q: use minimum FDR 0.05 cutoff to call significant regions.</span></span>
-<span id="cb15-55"><a href="#cb15-55" aria-hidden="true" tabindex="-1"></a><span class="co">## -B: ask MACS2 to output bedGraph files for experiment.</span></span>
+<span id="cb15-55"><a href="#cb15-55" aria-hidden="true" tabindex="-1"></a><span class="co">## -B: ask MACS3 to output bedGraph files for experiment.</span></span>
 <span id="cb15-56"><a href="#cb15-56" aria-hidden="true" tabindex="-1"></a><span class="co">## --nomodel --extsize 150: the subset data is not big enough (&lt;1000 peak) for</span></span>
-<span id="cb15-57"><a href="#cb15-57" aria-hidden="true" tabindex="-1"></a><span class="co">## macs2 to generate a model. We manually feed one.</span></span>
+<span id="cb15-57"><a href="#cb15-57" aria-hidden="true" tabindex="-1"></a><span class="co">## macs3 to generate a model. We manually feed one.</span></span>
 <span id="cb15-58"><a href="#cb15-58" aria-hidden="true" tabindex="-1"></a><span class="co">## because we used toy genome, the genome size we set as 10M</span></span>
-<span id="cb15-59"><a href="#cb15-59" aria-hidden="true" tabindex="-1"></a><span class="ex">macs2</span> callpeak <span class="at">-t</span> bam/<span class="va">${prefix}</span>.<span class="va">$species</span>.<span class="va">${tag</span><span class="op">[</span><span class="va">$i</span><span class="op">]</span><span class="va">}</span>.srt.markDup.bam <span class="dt">\</span></span>
+<span id="cb15-59"><a href="#cb15-59" aria-hidden="true" tabindex="-1"></a><span class="ex">macs3</span> callpeak <span class="at">-t</span> bam/<span class="va">${prefix}</span>.<span class="va">$species</span>.<span class="va">${tag</span><span class="op">[</span><span class="va">$i</span><span class="op">]</span><span class="va">}</span>.srt.markDup.bam <span class="dt">\</span></span>
 <span id="cb15-60"><a href="#cb15-60" aria-hidden="true" tabindex="-1"></a>               <span class="at">-f</span> BAM <span class="at">-g</span> 10e6 <span class="at">-n</span> <span class="va">${prefix}</span>.<span class="va">$species</span>.<span class="va">${tag</span><span class="op">[</span><span class="va">$i</span><span class="op">]</span><span class="va">}</span> <span class="dt">\</span></span>
-<span id="cb15-61"><a href="#cb15-61" aria-hidden="true" tabindex="-1"></a>               <span class="at">--outdir</span> macs2/<span class="va">${tag</span><span class="op">[</span><span class="va">$i</span><span class="op">]</span><span class="va">}</span> <span class="at">-q</span> 0.05 <span class="dt">\</span></span>
+<span id="cb15-61"><a href="#cb15-61" aria-hidden="true" tabindex="-1"></a>               <span class="at">--outdir</span> macs3/<span class="va">${tag</span><span class="op">[</span><span class="va">$i</span><span class="op">]</span><span class="va">}</span> <span class="at">-q</span> 0.05 <span class="dt">\</span></span>
 <span id="cb15-62"><a href="#cb15-62" aria-hidden="true" tabindex="-1"></a>               <span class="at">-B</span> <span class="at">--nomodel</span> <span class="at">--extsize</span> 150</span>
 <span id="cb15-63"><a href="#cb15-63" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb15-64"><a href="#cb15-64" aria-hidden="true" tabindex="-1"></a><span class="cf">done</span></span></code></pre></div>
@@ -358,47 +404,48 @@
 <div class="section level3">
 <h3 id="differential-analysis">Differential analysis<a class="anchor" aria-label="anchor" href="#differential-analysis"></a>
 </h3>
-<p>We will use <code>DiffBind</code> package to do the differential analysis.</p>
+<p>We will use <code>DiffBind</code> package to do the differential
+analysis.</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">setwd</a></span><span class="op">(</span><span class="st">"/home/rstudio/data/ChIPseq"</span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st">"DiffBind"</span><span class="op">)</span>
-<span class="op">(</span><span class="va">bams</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.files.html" class="external-link">dir</a></span><span class="op">(</span><span class="st">"bam"</span>, <span class="st">"markDup.bam$"</span>, full.names <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>
-<span class="op">(</span><span class="va">Peaks</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.files.html" class="external-link">dir</a></span><span class="op">(</span><span class="st">"macs2"</span>, <span class="st">"narrowPeak$"</span>, full.names <span class="op">=</span> <span class="cn">TRUE</span>, recursive <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>
-<span class="op">(</span><span class="va">SampleID</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/basename.html" class="external-link">basename</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/basename.html" class="external-link">dirname</a></span><span class="op">(</span><span class="va">Peaks</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
-<span class="op">(</span><span class="va">Condition</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">sub</a></span><span class="op">(</span><span class="st">".rep."</span>, <span class="st">""</span>, <span class="va">SampleID</span><span class="op">)</span><span class="op">)</span>
-<span class="op">(</span><span class="va">Replicate</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">sub</a></span><span class="op">(</span><span class="st">"^.*rep"</span>, <span class="st">""</span>, <span class="va">SampleID</span><span class="op">)</span><span class="op">)</span>
-<span class="va">Peakcaller</span> <span class="op">&lt;-</span> <span class="st">"macs2"</span>
-<span class="va">PeakFormat</span> <span class="op">&lt;-</span> <span class="st">"narrowPeak"</span>
-<span class="va">samples</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>SampleID<span class="op">=</span><span class="va">SampleID</span>,
-                      Condition<span class="op">=</span><span class="va">Condition</span>,
-                      Replicate<span class="op">=</span><span class="va">Replicate</span>,
-                      bamReads<span class="op">=</span><span class="va">bams</span>,
-                      Peaks<span class="op">=</span><span class="va">Peaks</span>,
-                      Peakcaller<span class="op">=</span><span class="va">Peakcaller</span>,
-                      PeakFormat<span class="op">=</span><span class="va">PeakFormat</span>,
-                      ScoreCol<span class="op">=</span><span class="fl">5</span><span class="op">)</span>
-
-<span class="va">pf</span> <span class="op">&lt;-</span> <span class="st">"DiffBind"</span>
-<span class="va">out</span> <span class="op">&lt;-</span> <span class="st">"sample.csv"</span>
-<span class="fu"><a href="https://rdrr.io/r/base/files2.html" class="external-link">dir.create</a></span><span class="op">(</span><span class="va">pf</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/write.table.html" class="external-link">write.csv</a></span><span class="op">(</span><span class="va">samples</span>, <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">pf</span>, <span class="va">out</span><span class="op">)</span><span class="op">)</span>
-<span class="va">chip</span> <span class="op">&lt;-</span> <span class="fu">dba</span><span class="op">(</span>sampleSheet <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">pf</span>, <span class="va">out</span><span class="op">)</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/grDevices/pdf.html" class="external-link">pdf</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">pf</span>, <span class="st">"DiffBind.sample.correlation.pdf"</span><span class="op">)</span>, width <span class="op">=</span> <span class="fl">9</span>, height <span class="op">=</span> <span class="fl">9</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">chip</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/grDevices/dev.html" class="external-link">dev.off</a></span><span class="op">(</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/grDevices/pdf.html" class="external-link">pdf</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">pf</span>, <span class="st">"DiffBind.PCA.plot.pdf"</span><span class="op">)</span><span class="op">)</span>
-<span class="fu">dba.plotPCA</span><span class="op">(</span><span class="va">chip</span>, <span class="va">DBA_CONDITION</span>, label<span class="op">=</span><span class="va">DBA_ID</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/grDevices/dev.html" class="external-link">dev.off</a></span><span class="op">(</span><span class="op">)</span>
-
-<span class="va">chip</span> <span class="op">&lt;-</span> <span class="fu">dba.count</span><span class="op">(</span><span class="va">chip</span><span class="op">)</span>
-<span class="va">chip</span> <span class="op">&lt;-</span> <span class="fu">dba.normalize</span><span class="op">(</span><span class="va">chip</span><span class="op">)</span> <span class="co">## add for DiffBind 3.0</span>
-<span class="va">BLACKLIST</span> <span class="op">&lt;-</span> <span class="cn">FALSE</span> <span class="co">## fish data, no blacklist yet.</span>
-<span class="va">chip</span> <span class="op">&lt;-</span> <span class="fu">dba.blacklist</span><span class="op">(</span><span class="va">chip</span>, blacklist<span class="op">=</span><span class="va">BLACKLIST</span>, greylist<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span>
-<span class="va">chip</span> <span class="op">&lt;-</span> <span class="fu">dba.contrast</span><span class="op">(</span><span class="va">chip</span>, minMembers<span class="op">=</span><span class="fl">2</span>, categories <span class="op">=</span> <span class="va">DBA_CONDITION</span><span class="op">)</span>
-<span class="va">chip</span> <span class="op">&lt;-</span> <span class="fu">dba.analyze</span><span class="op">(</span><span class="va">chip</span>, bBlacklist <span class="op">=</span> <span class="cn">FALSE</span>, bGreylist <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-<span class="va">chip.DB</span> <span class="op">&lt;-</span> <span class="fu">dba.report</span><span class="op">(</span><span class="va">chip</span>, th<span class="op">=</span><span class="fl">1</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">chip.DB</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/write.table.html" class="external-link">write.csv</a></span><span class="op">(</span><span class="va">chip.DB</span>, <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">pf</span>, <span class="st">"DiffBind.results.csv"</span><span class="op">)</span>, row.names<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">setwd</a></span><span class="op">(</span><span class="st">"/home/rstudio/data/ChIPseq"</span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st">"DiffBind"</span><span class="op">)</span></span>
+<span><span class="op">(</span><span class="va">bams</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.files.html" class="external-link">dir</a></span><span class="op">(</span><span class="st">"bam"</span>, <span class="st">"markDup.bam$"</span>, full.names <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="op">(</span><span class="va">Peaks</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.files.html" class="external-link">dir</a></span><span class="op">(</span><span class="st">"macs3"</span>, <span class="st">"narrowPeak$"</span>, full.names <span class="op">=</span> <span class="cn">TRUE</span>, recursive <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="op">(</span><span class="va">SampleID</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/basename.html" class="external-link">basename</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/basename.html" class="external-link">dirname</a></span><span class="op">(</span><span class="va">Peaks</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="op">(</span><span class="va">Condition</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">sub</a></span><span class="op">(</span><span class="st">".rep."</span>, <span class="st">""</span>, <span class="va">SampleID</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="op">(</span><span class="va">Replicate</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">sub</a></span><span class="op">(</span><span class="st">"^.*rep"</span>, <span class="st">""</span>, <span class="va">SampleID</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">Peakcaller</span> <span class="op">&lt;-</span> <span class="st">"macs3"</span></span>
+<span><span class="va">PeakFormat</span> <span class="op">&lt;-</span> <span class="st">"narrowPeak"</span></span>
+<span><span class="va">samples</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>SampleID<span class="op">=</span><span class="va">SampleID</span>,</span>
+<span>                      Condition<span class="op">=</span><span class="va">Condition</span>,</span>
+<span>                      Replicate<span class="op">=</span><span class="va">Replicate</span>,</span>
+<span>                      bamReads<span class="op">=</span><span class="va">bams</span>,</span>
+<span>                      Peaks<span class="op">=</span><span class="va">Peaks</span>,</span>
+<span>                      Peakcaller<span class="op">=</span><span class="va">Peakcaller</span>,</span>
+<span>                      PeakFormat<span class="op">=</span><span class="va">PeakFormat</span>,</span>
+<span>                      ScoreCol<span class="op">=</span><span class="fl">5</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">pf</span> <span class="op">&lt;-</span> <span class="st">"DiffBind"</span></span>
+<span><span class="va">out</span> <span class="op">&lt;-</span> <span class="st">"sample.csv"</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/files2.html" class="external-link">dir.create</a></span><span class="op">(</span><span class="va">pf</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/write.table.html" class="external-link">write.csv</a></span><span class="op">(</span><span class="va">samples</span>, <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">pf</span>, <span class="va">out</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">chip</span> <span class="op">&lt;-</span> <span class="fu">dba</span><span class="op">(</span>sampleSheet <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">pf</span>, <span class="va">out</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/grDevices/pdf.html" class="external-link">pdf</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">pf</span>, <span class="st">"DiffBind.sample.correlation.pdf"</span><span class="op">)</span>, width <span class="op">=</span> <span class="fl">9</span>, height <span class="op">=</span> <span class="fl">9</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">chip</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/grDevices/dev.html" class="external-link">dev.off</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/grDevices/pdf.html" class="external-link">pdf</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">pf</span>, <span class="st">"DiffBind.PCA.plot.pdf"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu">dba.plotPCA</span><span class="op">(</span><span class="va">chip</span>, <span class="va">DBA_CONDITION</span>, label<span class="op">=</span><span class="va">DBA_ID</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/grDevices/dev.html" class="external-link">dev.off</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">chip</span> <span class="op">&lt;-</span> <span class="fu">dba.count</span><span class="op">(</span><span class="va">chip</span><span class="op">)</span></span>
+<span><span class="va">chip</span> <span class="op">&lt;-</span> <span class="fu">dba.normalize</span><span class="op">(</span><span class="va">chip</span><span class="op">)</span> <span class="co">## add for DiffBind 3.0</span></span>
+<span><span class="va">BLACKLIST</span> <span class="op">&lt;-</span> <span class="cn">FALSE</span> <span class="co">## fish data, no blacklist yet.</span></span>
+<span><span class="va">chip</span> <span class="op">&lt;-</span> <span class="fu">dba.blacklist</span><span class="op">(</span><span class="va">chip</span>, blacklist<span class="op">=</span><span class="va">BLACKLIST</span>, greylist<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="va">chip</span> <span class="op">&lt;-</span> <span class="fu">dba.contrast</span><span class="op">(</span><span class="va">chip</span>, minMembers<span class="op">=</span><span class="fl">2</span>, categories <span class="op">=</span> <span class="va">DBA_CONDITION</span><span class="op">)</span></span>
+<span><span class="va">chip</span> <span class="op">&lt;-</span> <span class="fu">dba.analyze</span><span class="op">(</span><span class="va">chip</span>, bBlacklist <span class="op">=</span> <span class="cn">FALSE</span>, bGreylist <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="va">chip.DB</span> <span class="op">&lt;-</span> <span class="fu">dba.report</span><span class="op">(</span><span class="va">chip</span>, th<span class="op">=</span><span class="fl">1</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">chip.DB</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/write.table.html" class="external-link">write.csv</a></span><span class="op">(</span><span class="va">chip.DB</span>, <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">pf</span>, <span class="st">"DiffBind.results.csv"</span><span class="op">)</span>, row.names<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
   </div>
@@ -420,7 +467,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>
