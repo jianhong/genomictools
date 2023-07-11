@@ -34,7 +34,8 @@ This script will get the latest version of docker container for this workshop.
 
 ```{bash, eval=FALSE}
 which docker
-docker pull jianhong/genomictools:latest
+#docker pull jianhong/genomictools:latest
+docker pull ghcr.io/jianhong/genomictools:latest
 ```
 
 Change the docker Memory Resources to >= 5G in the Preferences setting page of Docker.
@@ -54,10 +55,15 @@ docker run --memory 5g -e PASSWORD=123456 -p 8787:8787 \
 the container at http://localhost:8787 with username "rstudio" and password "123456".
 All the following steps are running in Rstudio "Terminal" or "Console".
 
+You may want to open the source of "scripts.Rmd" at the "Source Panes" by
+```{r, eval=FALSE}
+rstudioapi::documentOpen("/usr/local/lib/R/site-library/basicBioinformaticsDRC2023/doc/scripts.Rmd")
+```
+
 ## Run kallisto and Salmon for RNA-seq
 
 The sample files are packaged 
-in basicBioinformaticsRNI2022 package and Docker container. 
+in basicBioinformaticsDRC2023 package and Docker container. 
 
 Now we will download the zebrafish cDNA files from ENSEMBL in order to build the 
 Kallisto and Salmon transcript index. If you are doing rRNA depletion library,
@@ -83,7 +89,8 @@ chromosome 4, 13, 16 and 21 to speed up the test run.
 ```{bash, eval=FALSE}
 mkdir data/RNAseq
 cd data/RNAseq
-wget https://raw.githubusercontent.com/jianhong/genomictools/master/inst/extdata/Danio_rerio.GRCz11.cdna.toy.fa.gz
+# wget https://raw.githubusercontent.com/jianhong/genomictools/master/inst/extdata/Danio_rerio.GRCz11.cdna.toy.fa.gz
+ln -s /usr/local/lib/R/site-library/basicBioinformaticsDRC2023/extdata/Danio_rerio.GRCz11.cdna.toy.fa.gz ./
 ```
 
 It will take several seconds to build the toy index.
@@ -111,7 +118,7 @@ It will take several minutes for the sample data.
 ```{bash, eval=FALSE}
 # the toy RNAseq data is saved in /home/rstudio/RNAseq folder
 # create a link to current folder
-ln -s /home/rstudio/RNAseq/fastq ./fastq
+ln -s /home/rstudio/RNAseq/fastq ./
 # mapping
 # Ablated and Uninjured are related with fastq file name
 mkdir -p kallisto_quant
@@ -167,7 +174,8 @@ head(t2g, n=3)
 If you have trouble in downloading the data from ensembl, try to load the pre-saved
 object for the toy data.
 ```{r, eval=FALSE}
-t2g <- readRDS(url("https://raw.githubusercontent.com/jianhong/genomictools/master/inst/extdata/t2g.rds"))
+# t2g <- readRDS(url("https://raw.githubusercontent.com/jianhong/genomictools/master/inst/extdata/t2g.rds"))
+t2g <- readRDS(system.file("extdata", "t2g.rds", package = "basicBioinformaticsDRC2023"))
 head(t2g, n=3)
 ```
 
@@ -181,7 +189,7 @@ aggregate to gene level. Downstream are using DESeq2 to do gene level DE analysi
 library(tximport)
 library(DESeq2)
 
-setwd("RNAseq/") ## RNAseq is the folder where saved the salmon_quant and kallisto_quant
+setwd("~/data/RNAseq") ## RNAseq is the folder where saved the salmon_quant and kallisto_quant
 (salmon_files <- dir("salmon_quant", "sf$", 
                      recursive = TRUE, 
                      full.names = TRUE))
@@ -200,7 +208,7 @@ res.salmon[!is.na(res.salmon$padj), ]
 
 ### run tximport + DESeq2 for kallisto results
 ```{r, eval=FALSE}
-(kallisto_files <- dir("kallisto_quant", "abundance.h5", 
+(kallisto_files <- dir("kallisto_quant", "abundance.tsv", 
                        recursive = TRUE, full.names = TRUE))
 
 txi.kallisto <- tximport(kallisto_files, type = "kallisto", 
@@ -221,7 +229,7 @@ res.kallisto[!is.na(res.kallisto$padj), ]
 
 The following code is showing how to use sleuth to do DE analysis. 
 However, the sleuth package is not updated. It may be broken.
-```{r}
+```{r, eval=FALSE}
 #BiocManager::install("pachterlab/sleuth")
 library(sleuth)
 samples <- dir("kallisto_quant")
@@ -257,9 +265,9 @@ the alignment process.
 
 ```{bash, eval=FALSE}
 ## change you working directory
-mkdir -p /home/rstudio/data/ChIPseq
-ln -s /home/rstudio/ChIPseq/fastq /home/rstudio/data/ChIPseq/
-cd /home/rstudio/data/ChIPseq
+mkdir -p $HOME/data/ChIPseq
+ln -s $HOME/ChIPseq/fastq $HOME/data/ChIPseq/
+cd $HOME/data/ChIPseq
 ## download the zebrafish GRCz11 genome from ENSEMBLE
 wget ftp://ftp.ensembl.org/pub/release-105/fasta/danio_rerio/dna/Danio_rerio.GRCz11.dna.primary_assembly.fa.gz
 ## build the index
@@ -270,7 +278,8 @@ bwa index -p GRCz11 Danio_rerio.GRCz11.dna.primary_assembly.fa.gz
 The data are only a subset of the whole genome. We will only use genes in
 chromosome 4, 13, 16 and 21 to speed up the test run.
 ```{bash, eval=FALSE}
-wget https://raw.githubusercontent.com/jianhong/genomictools/master/inst/extdata/Danio_rerio.GRCz11.dna.toy.fa.gz
+# wget https://raw.githubusercontent.com/jianhong/genomictools/master/inst/extdata/Danio_rerio.GRCz11.dna.toy.fa.gz
+ln -s /usr/local/lib/R/site-library/basicBioinformaticsDRC2023/extdata/Danio_rerio.GRCz11.dna.toy.fa.gz ./
 ## the following step will take about 3min
 bwa index -p GRCz11.toy Danio_rerio.GRCz11.dna.toy.fa.gz
 ```
@@ -318,6 +327,7 @@ bwa mem -M -t 2 GRCz11.toy \
 mkdir -p bam
 ## -q: skip alignments with MAPQ samller than 30.
 samtools view -bhS -q 30 sam/$prefix.$species.${tag[$i]}.sam > bam/$prefix.$species.${tag[$i]}.bam
+rm sam/$prefix.$species.${tag[$i]}.sam
 ## sort and index the bam file for quick access.
 samtools sort bam/$prefix.$species.${tag[$i]}.bam -o bam/$prefix.$species.${tag[$i]}.srt.bam
 samtools index bam/$prefix.$species.${tag[$i]}.srt.bam

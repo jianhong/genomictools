@@ -25,14 +25,14 @@ images
 Based on Ubuntu
 
 ```sh
-docker run -e PASSWORD=<choose_a_password_for_rstudio> -p 8787:8787 YOURDOCKERIMAGENAME
+docker run -e PASSWORD=<choose_a_password_for_rstudio> -p 8787:8787 ghcr.io/jianhong/genomictools:latest
 ```
 Once running, navigate to http://localhost:8787/ and then login with `rstudio`:`yourchosenpassword`.
 
 To try with **this** repository docker image:
 
 ```sh
-docker run -e PASSWORD=abc -p 8787:8787 ghcr.io/bioconductor/buildabiocworkshop
+docker run -e PASSWORD=123456 -p 8787:8787 ghcr.io/jianhong/genomictools:latest
 ```
 
 *NOTE*: Running docker that uses the password in plain text like above exposes the password to others

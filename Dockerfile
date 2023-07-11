@@ -2,6 +2,19 @@
 # Dockerfile to build bwa, kallisto, cufflinks, MACS3, samtools,
 # picard-tools, fastQC, bedtools, cutadapt, R, ucsc genome tools
 # images
+#  $ cd genomicTools.docker
+#  $ VERSION=0.1.4
+#  $ docker build -t jianhong/genomictools:$VERSION .  ## --no-cache
+#  $ docker run -it --rm -e PASSWORD=123456 -p 8787:8787 -v ${PWD}/tmp4genomictools:/home/rstudio/data jianhong/genomictools:$VERSION
+#  $ docker images jianhong/genomictools:$VERSION
+#  $ docker push jianhong/genomictools:$VERSION
+#  $ docker tag jianhong/genomictools:$VERSION jianhong/genomictools:latest
+#  $ docker push jianhong/genomictools:latest
+#  $ cd ~
+#  $ docker pull jianhong/genomictools:latest
+#  $ mkdir tmp4genomictools
+#  $ docker run -it --rm -e PASSWORD=123456 -p 8787:8787 -v ${PWD}/tmp4genomictools:/home/rstudio/data jianhong/genomictools:latest
+# ## then you can connect the rstudio with localhost:8787 by username: rstudio password:123456
 ##################################################################
 # Set the base image to Ubuntu
 FROM bioconductor/bioconductor_docker:devel
