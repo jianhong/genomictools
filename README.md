@@ -2,7 +2,7 @@
 
 ![.github/workflows/push_docker.yaml](https://github.com/jianhong/genomictools/workflows/.github/workflows/push_docker.yaml/badge.svg)
 
-[github page](https://jianhong.github.io/genomictools/) | 
+[github page](https://jianhong.github.io/genomictools/) |
 [source code](https://github.com/jianhong/genomictools)
 
 This package will create the docker file for the tools used for RNA-seq and
@@ -15,25 +15,29 @@ the slides for the course.
 * Basic knowledge of Docker
 * A computer with internet connection
 
-## genomictools
+## To use the resulting image:
 docker file for genomic tools
 
-Dockerfile to build bwa, kallisto, MACS2, samtools, 
-picard-tools, fastQC, bedtools, cutadapt, deeptools, 
+Dockerfile to build bwa, kallisto, MACS2, samtools,
+picard-tools, fastQC, bedtools, cutadapt, deeptools,
 R, ucsc genome tools
 images
 Based on Ubuntu
 
-This image will not work on M1 chip macbook for RStudio Sever. 
-<pre>
-$ cd ~
-$ docker pull jianhong/genomictools:latest
-$ mkdir tmp4genomictools
-$ docker run -e PASSWORD=123456 -p 8787:8787 \
-$       -v ${PWD}/tmp4genomictools:/data \
-$       jianhong/genomictools:latest
+```sh
+docker run -e PASSWORD=<choose_a_password_for_rstudio> -p 8787:8787 YOURDOCKERIMAGENAME
+```
+Once running, navigate to http://localhost:8787/ and then login with `rstudio`:`yourchosenpassword`.
 
-</pre>
+To try with **this** repository docker image:
+
+```sh
+docker run -e PASSWORD=abc -p 8787:8787 ghcr.io/bioconductor/buildabiocworkshop
+```
+
+*NOTE*: Running docker that uses the password in plain text like above exposes the password to others
+in a multi-user system (like a shared workstation or compute node). In practice, consider using an environment
+variable instead of plain text to pass along passwords and other secrets in docker command lines.
 
 ## pipeline for RNA-seq
 

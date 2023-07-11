@@ -1,23 +1,16 @@
 #################################################################
-# Dockerfile to build bwa, kallisto, cufflinks, MACS3, samtools, 
+# Dockerfile to build bwa, kallisto, cufflinks, MACS3, samtools,
 # picard-tools, fastQC, bedtools, cutadapt, R, ucsc genome tools
 # images
-# Based on Ubuntu
-#  $ cd genomicTools.docker
-#  $ VERSION=0.1.3
-#  $ docker build -t jianhong/genomictools:$VERSION .  ## --no-cache
-#  $ docker images jianhong/genomictools:$VERSION
-#  $ docker push jianhong/genomictools:$VERSION
-#  $ docker tag jianhong/genomictools:$VERSION jianhong/genomictools:latest
-#  $ docker push jianhong/genomictools:latest
-#  $ cd ~
-#  $ docker pull jianhong/genomictools:latest
-#  $ mkdir tmp4genomictools
-#  $ docker run -it --rm -e PASSWORD=123456 -p 8787:8787 -v ${PWD}/tmp4genomictools:/data jianhong/genomictools:latest
-# ## then you can connect the rstudio with localhost:8787 by username: rstudio password:123456
 ##################################################################
 # Set the base image to Ubuntu
-FROM bioconductor/bioconductor_docker:RELEASE_3_16
+FROM bioconductor/bioconductor_docker:devel
+
+# Define working directory.
+WORKDIR /home/rstudio
+
+# apply the ownership for rstudio
+COPY --chown=rstudio:rstudio . /home/rstudio/
 
 # File/Author / Maintainer
 MAINTAINER Jianhong Ou <jianhong.ou@duke.edu>
@@ -63,7 +56,13 @@ RUN wget http://hgdownload.soe.ucsc.edu/admin/exe/linux.x86_64/bedGraphToBigWig 
     wget http://hgdownload.soe.ucsc.edu/admin/exe/linux.x86_64/bedToBigBed && \
     chmod +x bedToBigBed && mv bedToBigBed /usr/local/sbin/
 
-## Install Bioconductor
+# Install BiocBase
+RUN Rscript -e "options(repos = c(CRAN = 'https://cran.r-project.org')); BiocManager::install(ask=FALSE)"
+
+# Install this package and its dependencies
+RUN Rscript -e "options(repos = c(CRAN = 'https://cran.r-project.org')); devtools::install('.', dependencies=TRUE, build_vignettes=TRUE, repos = BiocManager::repositories())"
+
+## Install packages in the documentation from Bioconductor
 RUN Rscript -e  "BiocManager::install(c('biomaRt', 'dplyr', 'tximport', 'DESeq2', 'DiffBind', 'EnhancedVolcano'), suppressUpdates=TRUE, ask=FALSE)"
 #RUN Rscript -e  "BiocManager::install('pachterlab/sleuth', update = TRUE, ask=FALSE)"
 RUN Rscript -e "BiocManager::install('rhdf5', update = FALSE, ask=FALSE)"
@@ -76,7 +75,6 @@ RUN cd ~ && git clone https://github.com/pachterlab/sleuth && \
 RUN git clone https://github.com/kundajelab/phantompeakqualtools && \
     Rscript -e "install.packages('phantompeakqualtools/spp_1.14.tar.gz')"
 
-RUN Rscript -e  "BiocManager::install('jianhong/genomictools', update = TRUE, ask=FALSE)"
 RUN path="/usr/local/lib/R/site-library/basicBioinformaticsDRC2023/extdata" && \
     rm -rf ~/sleuth && \
     cp -r $path/RNAseq /home/rstudio/ && \
@@ -84,7 +82,3 @@ RUN path="/usr/local/lib/R/site-library/basicBioinformaticsDRC2023/extdata" && \
 
 ## change the logger-type=stderr to syslog
 RUN sed -i 's/stderr/syslog/g' /etc/rstudio/logging.conf
-
-# Define working directory.
-WORKDIR /home/rstudio
-

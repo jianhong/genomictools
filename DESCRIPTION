@@ -2,15 +2,28 @@ Package: basicBioinformaticsDRC2023
 Type: Package
 Version: 1.0.4
 Title: DRC2023 basic bioinformatics
-Authors@R: person(given="Jianhong", family="Ou", email="jianhong.ou@duke.edu", 
-        role=c("aut", "cre"), comment=c(ORCID="0000-0002-8652-2488"))
+Authors@R:
+    person(given="Jianhong",
+           family="Ou",
+           email="jianhong.ou@duke.edu",
+           role=c("aut", "cre"),
+           comment=c(ORCID="0000-0002-8652-2488"))
 Maintainer: Jianhong Ou <jianhong.ou@duke.edu>
-Depends: R (>= 4.1.2)
-Suggests: knitr, rmarkdown, pkgdown
-Description: This package serves as a container for basic bioinformatics RNI2022 files.
-License: GPL (>= 2)
-Lazyload: yes
-URL: https://jianhong.github.io/genomictools
+Description: This package serves as a container for basic bioinformatics
+    DRC2023 files. In particular, a pkgdown website and docker image are
+    generated based on workflow settings.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.0
+Depends:
+    Biobase
+Suggests:
+    knitr,
+    rmarkdown,
+    pkgdown
+URL: https://jianhong.github.io/genomictools/
 BugReports: https://github.com/jianhong/genomictools/issues/new
-DockerImage: jianhong/genomictools:latest
 VignetteBuilder: knitr
+DockerImage: ghcr.io/jianhong/genomictools:latest
