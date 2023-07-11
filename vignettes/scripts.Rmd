@@ -17,7 +17,7 @@ knitr::opts_chunk$set(echo = TRUE, eval=FALSE)
 
 2. pipeline: bwa + MACS2 for ChIP-seq
 
-For more information please refer to the [slides](https://github.com/jianhong/genomictools/blob/master/inst/extdata/BasicBioinformaticsRNAseqChIPseqPrimer.pdf)
+For more information please refer to the [slides](https://github.com/jianhong/genomictools/blob/master/inst/extdata/BasicBioinformaticsRNAseqChIPseqATACseqPrimer.pdf)
 
 [![Youtube Video](https://img.youtube.com/vi/N_ul4CwM0ZU/0.jpg)](https://youtu.be/N_ul4CwM0ZU)
 https://youtu.be/N_ul4CwM0ZU
