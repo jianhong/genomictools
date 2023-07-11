@@ -16,13 +16,7 @@
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-<![endif]--><!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=UA-93043521-1"></script><script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'UA-93043521-1');
-</script>
+<![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
     
@@ -116,19 +110,19 @@ Desktop.</p>
 <p>Once the docker installed on you system, please try to run the
 following code in a terminal. This script will get the latest version of
 docker container for this workshop.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">which</span> docker</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> pull jianhong/genomictools:latest</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">which</span> docker</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="ex">docker</span> pull jianhong/genomictools:latest</span></code></pre></div>
 <p>Change the docker Memory Resources to &gt;= 5G in the Preferences
 setting page of Docker. And then run the following code in a
 terminal.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">## set docker memory to &gt; 5G</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co">## set docker memory to &gt; 5G ; !important</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">## RStudio server will not work for M1 chip MacBook.</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> tmp4genomictools</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">--memory</span> 5g <span class="at">-e</span> PASSWORD=123456 <span class="at">-p</span> 8787:8787 <span class="dt">\</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">-v</span> <span class="va">${PWD}</span>/tmp4genomictools:/home/rstudio/data <span class="dt">\</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  jianhong/genomictools:latest</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="co">## set docker memory to &gt; 5G</span></span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="co">## set docker memory to &gt; 5G ; !important</span></span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="co">## RStudio server will not work for M1 chip MacBook.</span></span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="bu">cd</span> ~</span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a><span class="fu">mkdir</span> tmp4genomictools</span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">--memory</span> 5g <span class="at">-e</span> PASSWORD=123456 <span class="at">-p</span> 8787:8787 <span class="dt">\</span></span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a>  <span class="at">-v</span> <span class="va">${PWD}</span>/tmp4genomictools:/home/rstudio/data <span class="dt">\</span></span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a>  jianhong/genomictools:latest</span></code></pre></div>
 <p>“docker run” will open port 8787 on your system. Now you can login
 rstudio in the container at <a href="http://localhost:8787" class="external-link uri">http://localhost:8787</a> with username “rstudio” and
 password “123456”. All the following steps are running in Rstudio
@@ -144,23 +138,23 @@ and Docker container.</p>
 to build the Kallisto and Salmon transcript index. If you are doing rRNA
 depletion library, please download and merge the cDNA and ncDNA files
 from ENSEMBL to make the full transcriptome.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> RNAseq</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">wget</span> ftp://ftp.ensembl.org/pub/release-105/fasta/danio_rerio/cdna/Danio_rerio.GRCz11.cdna.all.fa.gz</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="bu">cd</span> RNAseq</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="fu">wget</span> ftp://ftp.ensembl.org/pub/release-105/fasta/danio_rerio/cdna/Danio_rerio.GRCz11.cdna.all.fa.gz</span></code></pre></div>
 <p>Now we can build the transcriptome index. It will take some time and
 memory for full dataset. This is the reason why we need to set docker
 memory to &gt; 5G.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">kallisto</span> index <span class="at">-i</span> danRer.GRCz11_transcrits.idx Danio_rerio.GRCz11.cdna.all.fa.gz</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="ex">salmon</span> index <span class="at">-i</span> danRer.GRCz11_transcrits.salmon.idx <span class="at">-t</span> Danio_rerio.GRCz11.cdna.all.fa.gz</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="ex">kallisto</span> index <span class="at">-i</span> danRer.GRCz11_transcrits.idx Danio_rerio.GRCz11.cdna.all.fa.gz</span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a><span class="ex">salmon</span> index <span class="at">-i</span> danRer.GRCz11_transcrits.salmon.idx <span class="at">-t</span> Danio_rerio.GRCz11.cdna.all.fa.gz</span></code></pre></div>
 <p>The data are only a subset of the whole genome. We will only use
 genes in chromosome 4, 13, 16 and 21 to speed up the test run.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> data/RNAseq</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> data/RNAseq</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">wget</span> https://raw.githubusercontent.com/jianhong/genomictools/master/inst/extdata/Danio_rerio.GRCz11.cdna.toy.fa.gz</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="fu">mkdir</span> data/RNAseq</span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a><span class="bu">cd</span> data/RNAseq</span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a><span class="fu">wget</span> https://raw.githubusercontent.com/jianhong/genomictools/master/inst/extdata/Danio_rerio.GRCz11.cdna.toy.fa.gz</span></code></pre></div>
 <p>It will take several seconds to build the toy index.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">kallisto</span> index <span class="at">-i</span> danRer.GRCz11_transcrits.toy.idx Danio_rerio.GRCz11.cdna.toy.fa.gz</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="ex">salmon</span> index <span class="at">-i</span> danRer.GRCz11_transcrits.toy.salmon.idx <span class="at">-t</span> Danio_rerio.GRCz11.cdna.toy.fa.gz</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="ex">kallisto</span> index <span class="at">-i</span> danRer.GRCz11_transcrits.toy.idx Danio_rerio.GRCz11.cdna.toy.fa.gz</span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a><span class="ex">salmon</span> index <span class="at">-i</span> danRer.GRCz11_transcrits.toy.salmon.idx <span class="at">-t</span> Danio_rerio.GRCz11.cdna.toy.fa.gz</span></code></pre></div>
 <p>It’s time for quantifying the FASTQ files against our Kallisto index
 and Salmon index. We run both of them for comparison. For real data, you
 can select one of them.</p>
@@ -172,28 +166,28 @@ error of the length for kallisto.</p>
 processors in the bootstrapping. We set the bootstrapping by “-b 30” and
 “–numBootstraps 30”.</p>
 <p>It will take several minutes for the sample data.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># the toy RNAseq data is saved in /home/rstudio/RNAseq folder</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co"># create a link to current folder</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ln</span> <span class="at">-s</span> /home/rstudio/RNAseq/fastq ./fastq</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co"># mapping</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Ablated and Uninjured are related with fastq file name</span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> kallisto_quant</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> salmon_quant</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> rep <span class="kw">in</span> 1 2</span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="cf">do</span></span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> cond <span class="kw">in</span> Ablated Uninjured</span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="cf">do</span></span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="ex">kallisto</span> quant <span class="at">-i</span> danRer.GRCz11_transcrits.toy.idx <span class="dt">\</span></span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>               <span class="at">-o</span> kallisto_quant/<span class="va">$cond</span>.rep<span class="va">$rep</span> <span class="dt">\</span></span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>               <span class="at">-b</span> 30 <span class="at">-t</span> 2 fastq/<span class="va">$cond</span>.rep<span class="va">$rep</span>.fastq.gz <span class="dt">\</span></span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>               <span class="at">--single</span> <span class="at">-l</span> 200 <span class="at">-s</span> 50</span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="ex">salmon</span> quant <span class="at">-i</span> danRer.GRCz11_transcrits.toy.salmon.idx <span class="at">-l</span> A <span class="dt">\</span></span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>             <span class="at">-r</span> fastq/<span class="va">$cond</span>.rep<span class="va">$rep</span>.fastq.gz <span class="dt">\</span></span>
-<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>             <span class="at">--validateMappings</span> <span class="at">-p</span> 2 <span class="dt">\</span></span>
-<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>             <span class="at">-o</span> salmon_quant/<span class="va">$cond</span>.rep<span class="va">$rep</span> <span class="dt">\</span></span>
-<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>             <span class="at">--numBootstraps</span> 30 <span class="at">--seqBias</span> <span class="at">--gcBias</span></span>
-<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a><span class="cf">done</span></span>
-<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a><span class="cf">done</span></span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="co"># the toy RNAseq data is saved in /home/rstudio/RNAseq folder</span></span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a><span class="co"># create a link to current folder</span></span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a><span class="fu">ln</span> <span class="at">-s</span> /home/rstudio/RNAseq/fastq ./fastq</span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a><span class="co"># mapping</span></span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a><span class="co"># Ablated and Uninjured are related with fastq file name</span></span>
+<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> kallisto_quant</span>
+<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> salmon_quant</span>
+<span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a><span class="cf">for</span> rep <span class="kw">in</span> 1 2</span>
+<span id="cb7-9"><a href="#cb7-9" tabindex="-1"></a><span class="cf">do</span></span>
+<span id="cb7-10"><a href="#cb7-10" tabindex="-1"></a><span class="cf">for</span> cond <span class="kw">in</span> Ablated Uninjured</span>
+<span id="cb7-11"><a href="#cb7-11" tabindex="-1"></a><span class="cf">do</span></span>
+<span id="cb7-12"><a href="#cb7-12" tabindex="-1"></a><span class="ex">kallisto</span> quant <span class="at">-i</span> danRer.GRCz11_transcrits.toy.idx <span class="dt">\</span></span>
+<span id="cb7-13"><a href="#cb7-13" tabindex="-1"></a>               <span class="at">-o</span> kallisto_quant/<span class="va">$cond</span>.rep<span class="va">$rep</span> <span class="dt">\</span></span>
+<span id="cb7-14"><a href="#cb7-14" tabindex="-1"></a>               <span class="at">-b</span> 30 <span class="at">-t</span> 2 fastq/<span class="va">$cond</span>.rep<span class="va">$rep</span>.fastq.gz <span class="dt">\</span></span>
+<span id="cb7-15"><a href="#cb7-15" tabindex="-1"></a>               <span class="at">--single</span> <span class="at">-l</span> 200 <span class="at">-s</span> 50</span>
+<span id="cb7-16"><a href="#cb7-16" tabindex="-1"></a><span class="ex">salmon</span> quant <span class="at">-i</span> danRer.GRCz11_transcrits.toy.salmon.idx <span class="at">-l</span> A <span class="dt">\</span></span>
+<span id="cb7-17"><a href="#cb7-17" tabindex="-1"></a>             <span class="at">-r</span> fastq/<span class="va">$cond</span>.rep<span class="va">$rep</span>.fastq.gz <span class="dt">\</span></span>
+<span id="cb7-18"><a href="#cb7-18" tabindex="-1"></a>             <span class="at">--validateMappings</span> <span class="at">-p</span> 2 <span class="dt">\</span></span>
+<span id="cb7-19"><a href="#cb7-19" tabindex="-1"></a>             <span class="at">-o</span> salmon_quant/<span class="va">$cond</span>.rep<span class="va">$rep</span> <span class="dt">\</span></span>
+<span id="cb7-20"><a href="#cb7-20" tabindex="-1"></a>             <span class="at">--numBootstraps</span> 30 <span class="at">--seqBias</span> <span class="at">--gcBias</span></span>
+<span id="cb7-21"><a href="#cb7-21" tabindex="-1"></a><span class="cf">done</span></span>
+<span id="cb7-22"><a href="#cb7-22" tabindex="-1"></a><span class="cf">done</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="r-scripts-for-rnaseq">R scripts for RNAseq<a class="anchor" aria-label="anchor" href="#r-scripts-for-rnaseq"></a>
@@ -216,7 +210,7 @@ documentation by retrieve ENSEMBL transcript id to gene id.</p>
 <span>  <span class="va">t2g</span> <span class="op">&lt;-</span> <span class="fu">biomaRt</span><span class="fu">::</span><span class="fu">getBM</span><span class="op">(</span>attributes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ensembl_transcript_id"</span>, </span>
 <span>                                       <span class="st">"ensembl_gene_id"</span>,</span>
 <span>                                       <span class="st">"external_gene_name"</span><span class="op">)</span>, mart <span class="op">=</span> <span class="va">mart</span><span class="op">)</span></span>
-<span>  <span class="va">t2g</span> <span class="op">&lt;-</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename</a></span><span class="op">(</span><span class="va">t2g</span>, target_id <span class="op">=</span> <span class="va">ensembl_transcript_id</span>,</span>
+<span>  <span class="va">t2g</span> <span class="op">&lt;-</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu">rename</span><span class="op">(</span><span class="va">t2g</span>, target_id <span class="op">=</span> <span class="va">ensembl_transcript_id</span>,</span>
 <span>                       ens_gene <span class="op">=</span> <span class="va">ensembl_gene_id</span>, ext_gene <span class="op">=</span> <span class="va">external_gene_name</span><span class="op">)</span></span>
 <span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">t2g</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
@@ -311,20 +305,20 @@ sequence reads size as bwa-backtrack and bwa-sw. Aligning reads with
 bwa-mem, there are two steps, build the index and do alignment. BWA
 indexes the genome with an FM index based on the Burrows-Wheeler
 Transform to keep memory requirements low for the alignment process.</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co">## change you working directory</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> /home/rstudio/data/ChIPseq</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ln</span> <span class="at">-s</span> /home/rstudio/ChIPseq/fastq /home/rstudio/data/ChIPseq/</span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> /home/rstudio/data/ChIPseq</span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="co">## download the zebrafish GRCz11 genome from ENSEMBLE</span></span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="fu">wget</span> ftp://ftp.ensembl.org/pub/release-105/fasta/danio_rerio/dna/Danio_rerio.GRCz11.dna.primary_assembly.fa.gz</span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="co">## build the index</span></span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="co">## -p: prefix for all index files</span></span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="ex">bwa</span> index <span class="at">-p</span> GRCz11 Danio_rerio.GRCz11.dna.primary_assembly.fa.gz</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a><span class="co">## change you working directory</span></span>
+<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> /home/rstudio/data/ChIPseq</span>
+<span id="cb13-3"><a href="#cb13-3" tabindex="-1"></a><span class="fu">ln</span> <span class="at">-s</span> /home/rstudio/ChIPseq/fastq /home/rstudio/data/ChIPseq/</span>
+<span id="cb13-4"><a href="#cb13-4" tabindex="-1"></a><span class="bu">cd</span> /home/rstudio/data/ChIPseq</span>
+<span id="cb13-5"><a href="#cb13-5" tabindex="-1"></a><span class="co">## download the zebrafish GRCz11 genome from ENSEMBLE</span></span>
+<span id="cb13-6"><a href="#cb13-6" tabindex="-1"></a><span class="fu">wget</span> ftp://ftp.ensembl.org/pub/release-105/fasta/danio_rerio/dna/Danio_rerio.GRCz11.dna.primary_assembly.fa.gz</span>
+<span id="cb13-7"><a href="#cb13-7" tabindex="-1"></a><span class="co">## build the index</span></span>
+<span id="cb13-8"><a href="#cb13-8" tabindex="-1"></a><span class="co">## -p: prefix for all index files</span></span>
+<span id="cb13-9"><a href="#cb13-9" tabindex="-1"></a><span class="ex">bwa</span> index <span class="at">-p</span> GRCz11 Danio_rerio.GRCz11.dna.primary_assembly.fa.gz</span></code></pre></div>
 <p>The data are only a subset of the whole genome. We will only use
 genes in chromosome 4, 13, 16 and 21 to speed up the test run.</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">wget</span> https://raw.githubusercontent.com/jianhong/genomictools/master/inst/extdata/Danio_rerio.GRCz11.dna.toy.fa.gz</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="co">## the following step will take about 3min</span></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="ex">bwa</span> index <span class="at">-p</span> GRCz11.toy Danio_rerio.GRCz11.dna.toy.fa.gz</span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a><span class="fu">wget</span> https://raw.githubusercontent.com/jianhong/genomictools/master/inst/extdata/Danio_rerio.GRCz11.dna.toy.fa.gz</span>
+<span id="cb14-2"><a href="#cb14-2" tabindex="-1"></a><span class="co">## the following step will take about 3min</span></span>
+<span id="cb14-3"><a href="#cb14-3" tabindex="-1"></a><span class="ex">bwa</span> index <span class="at">-p</span> GRCz11.toy Danio_rerio.GRCz11.dna.toy.fa.gz</span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="run-fastqc-mapping-and-macs2">Run fastQC, mapping and MACS2<a class="anchor" aria-label="anchor" href="#run-fastqc-mapping-and-macs2"></a>
@@ -336,70 +330,70 @@ go through the results by click the index.html file in each sub-folder.
 We will perform alignment on the single-end reads. For more information
 on BWA and its functionality please refer to the <a href="http://bio-bwa.sourceforge.net/bwa.shtml" class="external-link">user manual</a>. <a href="https://github.com/macs3-project/MACS" class="external-link">MACS2</a> will be used to
 call the peaks.</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="va">group</span><span class="op">=</span><span class="va">(</span>Ablated Ablated Uninjured Uninjured<span class="va">)</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="va">tag</span><span class="op">=</span><span class="va">(</span>Ablated.rep1 Ablated.rep2 Uninjured.rep1 Uninjured.rep2<span class="va">)</span></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="va">species</span><span class="op">=</span>danRer11</span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="va">prefix</span><span class="op">=</span>bwa</span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="dt">{</span><span class="dv">0</span><span class="dt">..</span><span class="dv">3</span><span class="dt">}</span></span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="cf">do</span></span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="co">## fastQC</span></span>
-<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> fastqc/<span class="va">${group</span><span class="op">[</span><span class="va">$i</span><span class="op">]</span><span class="va">}</span></span>
-<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a><span class="ex">fastqc</span> <span class="at">-o</span> fastqc/<span class="va">${group</span><span class="op">[</span><span class="va">$i</span><span class="op">]</span><span class="va">}</span> <span class="at">-t</span> 2 <span class="dt">\</span></span>
-<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>       fastq/<span class="va">${tag</span><span class="op">[</span><span class="va">$i</span><span class="op">]</span><span class="va">}</span>.fastq.gz</span>
-<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a><span class="co">## trim adapter, need trim_galore be installed, here we do not do this step</span></span>
-<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a><span class="co"># mkdir -p fastq.trimmed</span></span>
-<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a><span class="co"># trim_galore -q 15 --fastqc -o fastq.trimmed/${group[$i]} fastq/${tag[$i]}.fastq.gz</span></span>
-<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a><span class="co">## mapping by bwa</span></span>
-<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> sam</span>
-<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a><span class="co">## -t: number of threads</span></span>
-<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a><span class="co">## -M: mark shorter split hits as secondary, this is optional for Picard compatibility.</span></span>
-<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a><span class="co">## &gt;: save alignment to a SAM file</span></span>
-<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a><span class="co">## 2&gt;: save standard error to log file</span></span>
-<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a><span class="ex">bwa</span> mem <span class="at">-M</span> <span class="at">-t</span> 2 GRCz11.toy <span class="dt">\</span></span>
-<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a>           fastq/<span class="va">${tag</span><span class="op">[</span><span class="va">$i</span><span class="op">]</span><span class="va">}</span>.fastq.gz <span class="dt">\</span></span>
-<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a>           <span class="op">&gt;</span> sam/<span class="va">$prefix</span>.<span class="va">$species</span>.<span class="va">${tag</span><span class="op">[</span><span class="va">$i</span><span class="op">]</span><span class="va">}</span>.sam <span class="dt">\</span></span>
-<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a>           <span class="dv">2</span><span class="op">&gt;</span> bwa.<span class="va">$prefix</span>.<span class="va">$species</span>.<span class="va">${tag</span><span class="op">[</span><span class="va">$i</span><span class="op">]</span><span class="va">}</span>.log.txt</span>
-<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a><span class="co">## convert sam file to bam and clean-up</span></span>
-<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> bam</span>
-<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a><span class="co">## -q: skip alignments with MAPQ samller than 30.</span></span>
-<span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a><span class="ex">samtools</span> view <span class="at">-bhS</span> <span class="at">-q</span> 30 sam/<span class="va">$prefix</span>.<span class="va">$species</span>.<span class="va">${tag</span><span class="op">[</span><span class="va">$i</span><span class="op">]</span><span class="va">}</span>.sam <span class="op">&gt;</span> bam/<span class="va">$prefix</span>.<span class="va">$species</span>.<span class="va">${tag</span><span class="op">[</span><span class="va">$i</span><span class="op">]</span><span class="va">}</span>.bam</span>
-<span id="cb15-31"><a href="#cb15-31" aria-hidden="true" tabindex="-1"></a><span class="co">## sort and index the bam file for quick access.</span></span>
-<span id="cb15-32"><a href="#cb15-32" aria-hidden="true" tabindex="-1"></a><span class="ex">samtools</span> sort bam/<span class="va">$prefix</span>.<span class="va">$species</span>.<span class="va">${tag</span><span class="op">[</span><span class="va">$i</span><span class="op">]</span><span class="va">}</span>.bam <span class="at">-o</span> bam/<span class="va">$prefix</span>.<span class="va">$species</span>.<span class="va">${tag</span><span class="op">[</span><span class="va">$i</span><span class="op">]</span><span class="va">}</span>.srt.bam</span>
-<span id="cb15-33"><a href="#cb15-33" aria-hidden="true" tabindex="-1"></a><span class="ex">samtools</span> index bam/<span class="va">$prefix</span>.<span class="va">$species</span>.<span class="va">${tag</span><span class="op">[</span><span class="va">$i</span><span class="op">]</span><span class="va">}</span>.srt.bam</span>
-<span id="cb15-34"><a href="#cb15-34" aria-hidden="true" tabindex="-1"></a><span class="co">## remove un-sorted bam file.</span></span>
-<span id="cb15-35"><a href="#cb15-35" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span> bam/<span class="va">$prefix</span>.<span class="va">$species</span>.<span class="va">${tag</span><span class="op">[</span><span class="va">$i</span><span class="op">]</span><span class="va">}</span>.bam</span>
-<span id="cb15-36"><a href="#cb15-36" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-37"><a href="#cb15-37" aria-hidden="true" tabindex="-1"></a><span class="co">## we remove the duplicated by picard::MarkDuplicates. </span></span>
-<span id="cb15-38"><a href="#cb15-38" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> bam/picard</span>
-<span id="cb15-39"><a href="#cb15-39" aria-hidden="true" tabindex="-1"></a><span class="ex">picard</span> MarkDuplicates <span class="dt">\</span></span>
-<span id="cb15-40"><a href="#cb15-40" aria-hidden="true" tabindex="-1"></a>       INPUT=bam/<span class="va">$prefix</span>.<span class="va">$species</span>.<span class="va">${tag</span><span class="op">[</span><span class="va">$i</span><span class="op">]</span><span class="va">}</span>.srt.bam <span class="dt">\</span></span>
-<span id="cb15-41"><a href="#cb15-41" aria-hidden="true" tabindex="-1"></a>       OUTPUT=bam/<span class="va">$prefix</span>.<span class="va">$species</span>.<span class="va">${tag</span><span class="op">[</span><span class="va">$i</span><span class="op">]</span><span class="va">}</span>.srt.markDup.bam <span class="dt">\</span></span>
-<span id="cb15-42"><a href="#cb15-42" aria-hidden="true" tabindex="-1"></a>       METRICS_FILE=bam/picard/<span class="va">$prefix</span>.<span class="va">$species</span>.<span class="va">${tag</span><span class="op">[</span><span class="va">$i</span><span class="op">]</span><span class="va">}</span>.srt.fil.picard_info.txt <span class="dt">\</span></span>
-<span id="cb15-43"><a href="#cb15-43" aria-hidden="true" tabindex="-1"></a>       REMOVE_DUPLICATES=true ASSUME_SORTED=true VALIDATION_STRINGENCY=LENIENT</span>
-<span id="cb15-44"><a href="#cb15-44" aria-hidden="true" tabindex="-1"></a><span class="ex">samtools</span> index bam/<span class="va">$prefix</span>.<span class="va">$species</span>.<span class="va">${tag</span><span class="op">[</span><span class="va">$i</span><span class="op">]</span><span class="va">}</span>.srt.markDup.bam</span>
-<span id="cb15-45"><a href="#cb15-45" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-46"><a href="#cb15-46" aria-hidden="true" tabindex="-1"></a><span class="co">## use deeptools::bamCoverage to generate bigwig files</span></span>
-<span id="cb15-47"><a href="#cb15-47" aria-hidden="true" tabindex="-1"></a><span class="co">## the bw file can be viewed in IGV</span></span>
-<span id="cb15-48"><a href="#cb15-48" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> bw</span>
-<span id="cb15-49"><a href="#cb15-49" aria-hidden="true" tabindex="-1"></a><span class="ex">bamCoverage</span> <span class="at">-b</span> bam/<span class="va">$prefix</span>.<span class="va">$species</span>.<span class="va">${tag</span><span class="op">[</span><span class="va">$i</span><span class="op">]</span><span class="va">}</span>.srt.markDup.bam <span class="at">-o</span> bw/<span class="va">$prefix</span>.<span class="va">$species</span>.<span class="va">${tag</span><span class="op">[</span><span class="va">$i</span><span class="op">]</span><span class="va">}</span>.bw <span class="at">--normalizeUsing</span> CPM</span>
-<span id="cb15-50"><a href="#cb15-50" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-51"><a href="#cb15-51" aria-hidden="true" tabindex="-1"></a><span class="co">## call peaks by macs2</span></span>
-<span id="cb15-52"><a href="#cb15-52" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> macs3/<span class="va">${tag</span><span class="op">[</span><span class="va">$i</span><span class="op">]</span><span class="va">}</span></span>
-<span id="cb15-53"><a href="#cb15-53" aria-hidden="true" tabindex="-1"></a><span class="co">## -g: mappable genome size</span></span>
-<span id="cb15-54"><a href="#cb15-54" aria-hidden="true" tabindex="-1"></a><span class="co">## -q: use minimum FDR 0.05 cutoff to call significant regions.</span></span>
-<span id="cb15-55"><a href="#cb15-55" aria-hidden="true" tabindex="-1"></a><span class="co">## -B: ask MACS3 to output bedGraph files for experiment.</span></span>
-<span id="cb15-56"><a href="#cb15-56" aria-hidden="true" tabindex="-1"></a><span class="co">## --nomodel --extsize 150: the subset data is not big enough (&lt;1000 peak) for</span></span>
-<span id="cb15-57"><a href="#cb15-57" aria-hidden="true" tabindex="-1"></a><span class="co">## macs3 to generate a model. We manually feed one.</span></span>
-<span id="cb15-58"><a href="#cb15-58" aria-hidden="true" tabindex="-1"></a><span class="co">## because we used toy genome, the genome size we set as 10M</span></span>
-<span id="cb15-59"><a href="#cb15-59" aria-hidden="true" tabindex="-1"></a><span class="ex">macs3</span> callpeak <span class="at">-t</span> bam/<span class="va">${prefix}</span>.<span class="va">$species</span>.<span class="va">${tag</span><span class="op">[</span><span class="va">$i</span><span class="op">]</span><span class="va">}</span>.srt.markDup.bam <span class="dt">\</span></span>
-<span id="cb15-60"><a href="#cb15-60" aria-hidden="true" tabindex="-1"></a>               <span class="at">-f</span> BAM <span class="at">-g</span> 10e6 <span class="at">-n</span> <span class="va">${prefix}</span>.<span class="va">$species</span>.<span class="va">${tag</span><span class="op">[</span><span class="va">$i</span><span class="op">]</span><span class="va">}</span> <span class="dt">\</span></span>
-<span id="cb15-61"><a href="#cb15-61" aria-hidden="true" tabindex="-1"></a>               <span class="at">--outdir</span> macs3/<span class="va">${tag</span><span class="op">[</span><span class="va">$i</span><span class="op">]</span><span class="va">}</span> <span class="at">-q</span> 0.05 <span class="dt">\</span></span>
-<span id="cb15-62"><a href="#cb15-62" aria-hidden="true" tabindex="-1"></a>               <span class="at">-B</span> <span class="at">--nomodel</span> <span class="at">--extsize</span> 150</span>
-<span id="cb15-63"><a href="#cb15-63" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-64"><a href="#cb15-64" aria-hidden="true" tabindex="-1"></a><span class="cf">done</span></span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a><span class="va">group</span><span class="op">=</span><span class="va">(</span>Ablated Ablated Uninjured Uninjured<span class="va">)</span></span>
+<span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a><span class="va">tag</span><span class="op">=</span><span class="va">(</span>Ablated.rep1 Ablated.rep2 Uninjured.rep1 Uninjured.rep2<span class="va">)</span></span>
+<span id="cb15-3"><a href="#cb15-3" tabindex="-1"></a><span class="va">species</span><span class="op">=</span>danRer11</span>
+<span id="cb15-4"><a href="#cb15-4" tabindex="-1"></a><span class="va">prefix</span><span class="op">=</span>bwa</span>
+<span id="cb15-5"><a href="#cb15-5" tabindex="-1"></a></span>
+<span id="cb15-6"><a href="#cb15-6" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="dt">{</span><span class="dv">0</span><span class="dt">..</span><span class="dv">3</span><span class="dt">}</span></span>
+<span id="cb15-7"><a href="#cb15-7" tabindex="-1"></a><span class="cf">do</span></span>
+<span id="cb15-8"><a href="#cb15-8" tabindex="-1"></a><span class="co">## fastQC</span></span>
+<span id="cb15-9"><a href="#cb15-9" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> fastqc/<span class="va">${group</span><span class="op">[</span><span class="va">$i</span><span class="op">]</span><span class="va">}</span></span>
+<span id="cb15-10"><a href="#cb15-10" tabindex="-1"></a><span class="ex">fastqc</span> <span class="at">-o</span> fastqc/<span class="va">${group</span><span class="op">[</span><span class="va">$i</span><span class="op">]</span><span class="va">}</span> <span class="at">-t</span> 2 <span class="dt">\</span></span>
+<span id="cb15-11"><a href="#cb15-11" tabindex="-1"></a>       fastq/<span class="va">${tag</span><span class="op">[</span><span class="va">$i</span><span class="op">]</span><span class="va">}</span>.fastq.gz</span>
+<span id="cb15-12"><a href="#cb15-12" tabindex="-1"></a><span class="co">## trim adapter, need trim_galore be installed, here we do not do this step</span></span>
+<span id="cb15-13"><a href="#cb15-13" tabindex="-1"></a><span class="co"># mkdir -p fastq.trimmed</span></span>
+<span id="cb15-14"><a href="#cb15-14" tabindex="-1"></a><span class="co"># trim_galore -q 15 --fastqc -o fastq.trimmed/${group[$i]} fastq/${tag[$i]}.fastq.gz</span></span>
+<span id="cb15-15"><a href="#cb15-15" tabindex="-1"></a></span>
+<span id="cb15-16"><a href="#cb15-16" tabindex="-1"></a><span class="co">## mapping by bwa</span></span>
+<span id="cb15-17"><a href="#cb15-17" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> sam</span>
+<span id="cb15-18"><a href="#cb15-18" tabindex="-1"></a><span class="co">## -t: number of threads</span></span>
+<span id="cb15-19"><a href="#cb15-19" tabindex="-1"></a><span class="co">## -M: mark shorter split hits as secondary, this is optional for Picard compatibility.</span></span>
+<span id="cb15-20"><a href="#cb15-20" tabindex="-1"></a><span class="co">## &gt;: save alignment to a SAM file</span></span>
+<span id="cb15-21"><a href="#cb15-21" tabindex="-1"></a><span class="co">## 2&gt;: save standard error to log file</span></span>
+<span id="cb15-22"><a href="#cb15-22" tabindex="-1"></a><span class="ex">bwa</span> mem <span class="at">-M</span> <span class="at">-t</span> 2 GRCz11.toy <span class="dt">\</span></span>
+<span id="cb15-23"><a href="#cb15-23" tabindex="-1"></a>           fastq/<span class="va">${tag</span><span class="op">[</span><span class="va">$i</span><span class="op">]</span><span class="va">}</span>.fastq.gz <span class="dt">\</span></span>
+<span id="cb15-24"><a href="#cb15-24" tabindex="-1"></a>           <span class="op">&gt;</span> sam/<span class="va">$prefix</span>.<span class="va">$species</span>.<span class="va">${tag</span><span class="op">[</span><span class="va">$i</span><span class="op">]</span><span class="va">}</span>.sam <span class="dt">\</span></span>
+<span id="cb15-25"><a href="#cb15-25" tabindex="-1"></a>           <span class="dv">2</span><span class="op">&gt;</span> bwa.<span class="va">$prefix</span>.<span class="va">$species</span>.<span class="va">${tag</span><span class="op">[</span><span class="va">$i</span><span class="op">]</span><span class="va">}</span>.log.txt</span>
+<span id="cb15-26"><a href="#cb15-26" tabindex="-1"></a></span>
+<span id="cb15-27"><a href="#cb15-27" tabindex="-1"></a><span class="co">## convert sam file to bam and clean-up</span></span>
+<span id="cb15-28"><a href="#cb15-28" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> bam</span>
+<span id="cb15-29"><a href="#cb15-29" tabindex="-1"></a><span class="co">## -q: skip alignments with MAPQ samller than 30.</span></span>
+<span id="cb15-30"><a href="#cb15-30" tabindex="-1"></a><span class="ex">samtools</span> view <span class="at">-bhS</span> <span class="at">-q</span> 30 sam/<span class="va">$prefix</span>.<span class="va">$species</span>.<span class="va">${tag</span><span class="op">[</span><span class="va">$i</span><span class="op">]</span><span class="va">}</span>.sam <span class="op">&gt;</span> bam/<span class="va">$prefix</span>.<span class="va">$species</span>.<span class="va">${tag</span><span class="op">[</span><span class="va">$i</span><span class="op">]</span><span class="va">}</span>.bam</span>
+<span id="cb15-31"><a href="#cb15-31" tabindex="-1"></a><span class="co">## sort and index the bam file for quick access.</span></span>
+<span id="cb15-32"><a href="#cb15-32" tabindex="-1"></a><span class="ex">samtools</span> sort bam/<span class="va">$prefix</span>.<span class="va">$species</span>.<span class="va">${tag</span><span class="op">[</span><span class="va">$i</span><span class="op">]</span><span class="va">}</span>.bam <span class="at">-o</span> bam/<span class="va">$prefix</span>.<span class="va">$species</span>.<span class="va">${tag</span><span class="op">[</span><span class="va">$i</span><span class="op">]</span><span class="va">}</span>.srt.bam</span>
+<span id="cb15-33"><a href="#cb15-33" tabindex="-1"></a><span class="ex">samtools</span> index bam/<span class="va">$prefix</span>.<span class="va">$species</span>.<span class="va">${tag</span><span class="op">[</span><span class="va">$i</span><span class="op">]</span><span class="va">}</span>.srt.bam</span>
+<span id="cb15-34"><a href="#cb15-34" tabindex="-1"></a><span class="co">## remove un-sorted bam file.</span></span>
+<span id="cb15-35"><a href="#cb15-35" tabindex="-1"></a><span class="fu">rm</span> bam/<span class="va">$prefix</span>.<span class="va">$species</span>.<span class="va">${tag</span><span class="op">[</span><span class="va">$i</span><span class="op">]</span><span class="va">}</span>.bam</span>
+<span id="cb15-36"><a href="#cb15-36" tabindex="-1"></a></span>
+<span id="cb15-37"><a href="#cb15-37" tabindex="-1"></a><span class="co">## we remove the duplicated by picard::MarkDuplicates. </span></span>
+<span id="cb15-38"><a href="#cb15-38" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> bam/picard</span>
+<span id="cb15-39"><a href="#cb15-39" tabindex="-1"></a><span class="ex">picard</span> MarkDuplicates <span class="dt">\</span></span>
+<span id="cb15-40"><a href="#cb15-40" tabindex="-1"></a>       INPUT=bam/<span class="va">$prefix</span>.<span class="va">$species</span>.<span class="va">${tag</span><span class="op">[</span><span class="va">$i</span><span class="op">]</span><span class="va">}</span>.srt.bam <span class="dt">\</span></span>
+<span id="cb15-41"><a href="#cb15-41" tabindex="-1"></a>       OUTPUT=bam/<span class="va">$prefix</span>.<span class="va">$species</span>.<span class="va">${tag</span><span class="op">[</span><span class="va">$i</span><span class="op">]</span><span class="va">}</span>.srt.markDup.bam <span class="dt">\</span></span>
+<span id="cb15-42"><a href="#cb15-42" tabindex="-1"></a>       METRICS_FILE=bam/picard/<span class="va">$prefix</span>.<span class="va">$species</span>.<span class="va">${tag</span><span class="op">[</span><span class="va">$i</span><span class="op">]</span><span class="va">}</span>.srt.fil.picard_info.txt <span class="dt">\</span></span>
+<span id="cb15-43"><a href="#cb15-43" tabindex="-1"></a>       REMOVE_DUPLICATES=true ASSUME_SORTED=true VALIDATION_STRINGENCY=LENIENT</span>
+<span id="cb15-44"><a href="#cb15-44" tabindex="-1"></a><span class="ex">samtools</span> index bam/<span class="va">$prefix</span>.<span class="va">$species</span>.<span class="va">${tag</span><span class="op">[</span><span class="va">$i</span><span class="op">]</span><span class="va">}</span>.srt.markDup.bam</span>
+<span id="cb15-45"><a href="#cb15-45" tabindex="-1"></a></span>
+<span id="cb15-46"><a href="#cb15-46" tabindex="-1"></a><span class="co">## use deeptools::bamCoverage to generate bigwig files</span></span>
+<span id="cb15-47"><a href="#cb15-47" tabindex="-1"></a><span class="co">## the bw file can be viewed in IGV</span></span>
+<span id="cb15-48"><a href="#cb15-48" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> bw</span>
+<span id="cb15-49"><a href="#cb15-49" tabindex="-1"></a><span class="ex">bamCoverage</span> <span class="at">-b</span> bam/<span class="va">$prefix</span>.<span class="va">$species</span>.<span class="va">${tag</span><span class="op">[</span><span class="va">$i</span><span class="op">]</span><span class="va">}</span>.srt.markDup.bam <span class="at">-o</span> bw/<span class="va">$prefix</span>.<span class="va">$species</span>.<span class="va">${tag</span><span class="op">[</span><span class="va">$i</span><span class="op">]</span><span class="va">}</span>.bw <span class="at">--normalizeUsing</span> CPM</span>
+<span id="cb15-50"><a href="#cb15-50" tabindex="-1"></a></span>
+<span id="cb15-51"><a href="#cb15-51" tabindex="-1"></a><span class="co">## call peaks by macs2</span></span>
+<span id="cb15-52"><a href="#cb15-52" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> macs3/<span class="va">${tag</span><span class="op">[</span><span class="va">$i</span><span class="op">]</span><span class="va">}</span></span>
+<span id="cb15-53"><a href="#cb15-53" tabindex="-1"></a><span class="co">## -g: mappable genome size</span></span>
+<span id="cb15-54"><a href="#cb15-54" tabindex="-1"></a><span class="co">## -q: use minimum FDR 0.05 cutoff to call significant regions.</span></span>
+<span id="cb15-55"><a href="#cb15-55" tabindex="-1"></a><span class="co">## -B: ask MACS3 to output bedGraph files for experiment.</span></span>
+<span id="cb15-56"><a href="#cb15-56" tabindex="-1"></a><span class="co">## --nomodel --extsize 150: the subset data is not big enough (&lt;1000 peak) for</span></span>
+<span id="cb15-57"><a href="#cb15-57" tabindex="-1"></a><span class="co">## macs3 to generate a model. We manually feed one.</span></span>
+<span id="cb15-58"><a href="#cb15-58" tabindex="-1"></a><span class="co">## because we used toy genome, the genome size we set as 10M</span></span>
+<span id="cb15-59"><a href="#cb15-59" tabindex="-1"></a><span class="ex">macs3</span> callpeak <span class="at">-t</span> bam/<span class="va">${prefix}</span>.<span class="va">$species</span>.<span class="va">${tag</span><span class="op">[</span><span class="va">$i</span><span class="op">]</span><span class="va">}</span>.srt.markDup.bam <span class="dt">\</span></span>
+<span id="cb15-60"><a href="#cb15-60" tabindex="-1"></a>               <span class="at">-f</span> BAM <span class="at">-g</span> 10e6 <span class="at">-n</span> <span class="va">${prefix}</span>.<span class="va">$species</span>.<span class="va">${tag</span><span class="op">[</span><span class="va">$i</span><span class="op">]</span><span class="va">}</span> <span class="dt">\</span></span>
+<span id="cb15-61"><a href="#cb15-61" tabindex="-1"></a>               <span class="at">--outdir</span> macs3/<span class="va">${tag</span><span class="op">[</span><span class="va">$i</span><span class="op">]</span><span class="va">}</span> <span class="at">-q</span> 0.05 <span class="dt">\</span></span>
+<span id="cb15-62"><a href="#cb15-62" tabindex="-1"></a>               <span class="at">-B</span> <span class="at">--nomodel</span> <span class="at">--extsize</span> 150</span>
+<span id="cb15-63"><a href="#cb15-63" tabindex="-1"></a></span>
+<span id="cb15-64"><a href="#cb15-64" tabindex="-1"></a><span class="cf">done</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="differential-analysis">Differential analysis<a class="anchor" aria-label="anchor" href="#differential-analysis"></a>

@@ -12,17 +12,13 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
 <script src="pkgdown.js"></script><meta property="og:title" content="genomictools">
-<meta property="og:description" content="This package serves as a container for basic bioinformatics RNI2022 files.">
+<meta property="og:description" content="This package serves as a container for basic bioinformatics
+    DRC2023 files. In particular, a pkgdown website and docker image are
+    generated based on workflow settings.">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-<![endif]--><!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=UA-93043521-1"></script><script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'UA-93043521-1');
-</script>
+<![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
     
@@ -83,8 +79,8 @@
 <div class="section level1">
 <div class="page-header"><h1 id="drc2023-basic-bioinformatics">DRC2023 basic bioinformatics<a class="anchor" aria-label="anchor" href="#drc2023-basic-bioinformatics"></a>
 </h1></div>
-<div class="figure">
-<img src="https://github.com/jianhong/genomictools/workflows/.github/workflows/push_docker.yaml/badge.svg" alt=""><p class="caption">.github/workflows/push_docker.yaml</p>
+<div class="float">
+<img src="https://github.com/jianhong/genomictools/workflows/.github/workflows/push_docker.yaml/badge.svg" alt=".github/workflows/push_docker.yaml"><div class="figcaption">.github/workflows/push_docker.yaml</div>
 </div>
 <p><a href="https://jianhong.github.io/genomictools/" class="external-link">github page</a> | <a href="https://github.com/jianhong/genomictools" class="external-link">source code</a></p>
 <p>This package will create the docker file for the tools used for RNA-seq and ChIP-seq analysis, the sample code and files to run the pipeline, and the slides for the course.</p>
@@ -99,20 +95,15 @@
 </ul>
 </div>
 <div class="section level2">
-<h2 id="genomictools">genomictools<a class="anchor" aria-label="anchor" href="#genomictools"></a>
+<h2 id="to-use-the-resulting-image">To use the resulting image:<a class="anchor" aria-label="anchor" href="#to-use-the-resulting-image"></a>
 </h2>
 <p>docker file for genomic tools</p>
 <p>Dockerfile to build bwa, kallisto, MACS2, samtools, picard-tools, fastQC, bedtools, cutadapt, deeptools, R, ucsc genome tools images Based on Ubuntu</p>
-This image will not work on M1 chip macbook for RStudio Sever.
-<pre>
-$ cd ~
-$ docker pull jianhong/genomictools:latest
-$ mkdir tmp4genomictools
-$ docker run -e PASSWORD=123456 -p 8787:8787 \
-$       -v ${PWD}/tmp4genomictools:/data \
-$       jianhong/genomictools:latest
-
-</pre>
+<div class="sourceCode" id="cb1"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">-e</span> PASSWORD=<span class="op">&lt;</span>choose_a_password_for_rstudio<span class="op">&gt;</span> -p 8787:8787 YOURDOCKERIMAGENAME</span></code></pre></div>
+<p>Once running, navigate to <a href="http://localhost:8787/" class="external-link uri">http://localhost:8787/</a> and then login with <code>rstudio</code>:<code>yourchosenpassword</code>.</p>
+<p>To try with <strong>this</strong> repository docker image:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">-e</span> PASSWORD=abc <span class="at">-p</span> 8787:8787 ghcr.io/bioconductor/buildabiocworkshop</span></code></pre></div>
+<p><em>NOTE</em>: Running docker that uses the password in plain text like above exposes the password to others in a multi-user system (like a shared workstation or compute node). In practice, consider using an environment variable instead of plain text to pass along passwords and other secrets in docker command lines.</p>
 </div>
 <div class="section level2">
 <h2 id="pipeline-for-rna-seq">pipeline for RNA-seq<a class="anchor" aria-label="anchor" href="#pipeline-for-rna-seq"></a>
@@ -160,7 +151,8 @@ $       jianhong/genomictools:latest
 <div class="license">
 <h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
-<li>GPL (&gt;= 2)</li>
+<li><a href="LICENSE.html">Full license</a></li>
+<li><small><a href="https://opensource.org/licenses/mit-license.php" class="external-link">MIT</a> + file <a href="LICENSE-text.html">LICENSE</a></small></li>
 </ul>
 </div>
 
