@@ -1,6 +1,6 @@
 Package: basicBioinformaticsDRC2023
 Type: Package
-Version: 1.0.4
+Version: 1.0.5
 Title: DRC2023 basic bioinformatics
 Authors@R:
     person(given="Jianhong",
