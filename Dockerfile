@@ -88,7 +88,7 @@ RUN cd ~ && git clone https://github.com/pachterlab/sleuth && \
 RUN git clone https://github.com/kundajelab/phantompeakqualtools && \
     Rscript -e "install.packages('phantompeakqualtools/spp_1.14.tar.gz')"
 
-RUN path="/usr/local/lib/R/site-library/basicBioinformaticsDRC2023/extdata" && \
+RUN path="/usr/local/lib/R/site-library/basicBioinformaticsDRC2024/extdata" && \
     rm -rf ~/sleuth && \
     cp -r $path/RNAseq /home/rstudio/ && \
     cp -r $path/ChIPseq /home/rstudio/

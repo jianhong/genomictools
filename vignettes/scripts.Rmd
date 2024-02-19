@@ -59,13 +59,13 @@ All the following steps are running in Rstudio "Terminal" or "Console".
 
 You may want to open the source of "scripts.Rmd" at the "Source Panes" by
 ```{r, eval=FALSE}
-rstudioapi::documentOpen("/usr/local/lib/R/site-library/basicBioinformaticsDRC2023/doc/scripts.Rmd")
+rstudioapi::documentOpen("/usr/local/lib/R/site-library/basicBioinformaticsDRC2024/doc/scripts.Rmd")
 ```
 
 ## Run kallisto and Salmon for RNA-seq
 
 The sample files are packaged 
-in basicBioinformaticsDRC2023 package and Docker container. 
+in basicBioinformaticsDRC2024 package and Docker container. 
 
 Now we will download the zebrafish cDNA files from ENSEMBL in order to build the 
 Kallisto and Salmon transcript index. If you are doing rRNA depletion library,
@@ -92,7 +92,7 @@ chromosome 4, 13, 16 and 21 to speed up the test run.
 mkdir data/RNAseq
 cd data/RNAseq
 # wget https://raw.githubusercontent.com/jianhong/genomictools/master/inst/extdata/Danio_rerio.GRCz11.cdna.toy.fa.gz
-ln -s /usr/local/lib/R/site-library/basicBioinformaticsDRC2023/extdata/Danio_rerio.GRCz11.cdna.toy.fa.gz ./
+ln -s /usr/local/lib/R/site-library/basicBioinformaticsDRC2024/extdata/Danio_rerio.GRCz11.cdna.toy.fa.gz ./
 ```
 
 It will take several seconds to build the toy index.
@@ -177,7 +177,7 @@ If you have trouble in downloading the data from ensembl, try to load the pre-sa
 object for the toy data.
 ```{r, eval=FALSE}
 # t2g <- readRDS(url("https://raw.githubusercontent.com/jianhong/genomictools/master/inst/extdata/t2g.rds"))
-t2g <- readRDS(system.file("extdata", "t2g.rds", package = "basicBioinformaticsDRC2023"))
+t2g <- readRDS(system.file("extdata", "t2g.rds", package = "basicBioinformaticsDRC2024"))
 head(t2g, n=3)
 ```
 
@@ -281,7 +281,7 @@ The data are only a subset of the whole genome. We will only use genes in
 chromosome 4, 13, 16 and 21 to speed up the test run.
 ```{bash, eval=FALSE}
 # wget https://raw.githubusercontent.com/jianhong/genomictools/master/inst/extdata/Danio_rerio.GRCz11.dna.toy.fa.gz
-ln -s /usr/local/lib/R/site-library/basicBioinformaticsDRC2023/extdata/Danio_rerio.GRCz11.dna.toy.fa.gz ./
+ln -s /usr/local/lib/R/site-library/basicBioinformaticsDRC2024/extdata/Danio_rerio.GRCz11.dna.toy.fa.gz ./
 ## the following step will take about 3min
 bwa index -p GRCz11.toy Danio_rerio.GRCz11.dna.toy.fa.gz
 ```
