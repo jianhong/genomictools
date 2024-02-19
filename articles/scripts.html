@@ -132,13 +132,13 @@ password “123456”. All the following steps are running in Rstudio
 <p>You may want to open the source of “scripts.Rmd” at the “Source
 Panes” by</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">rstudioapi</span><span class="fu">::</span><span class="fu"><a href="https://rstudio.github.io/rstudioapi/reference/rstudio-documents.html" class="external-link">documentOpen</a></span><span class="op">(</span><span class="st">"/usr/local/lib/R/site-library/basicBioinformaticsDRC2023/doc/scripts.Rmd"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">rstudioapi</span><span class="fu">::</span><span class="fu"><a href="https://rstudio.github.io/rstudioapi/reference/rstudio-documents.html" class="external-link">documentOpen</a></span><span class="op">(</span><span class="st">"/usr/local/lib/R/site-library/basicBioinformaticsDRC2024/doc/scripts.Rmd"</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
 <h2 id="run-kallisto-and-salmon-for-rna-seq">Run kallisto and Salmon for RNA-seq<a class="anchor" aria-label="anchor" href="#run-kallisto-and-salmon-for-rna-seq"></a>
 </h2>
-<p>The sample files are packaged in basicBioinformaticsDRC2023 package
+<p>The sample files are packaged in basicBioinformaticsDRC2024 package
 and Docker container.</p>
 <p>Now we will download the zebrafish cDNA files from ENSEMBL in order
 to build the Kallisto and Salmon transcript index. If you are doing rRNA
@@ -157,7 +157,7 @@ genes in chromosome 4, 13, 16 and 21 to speed up the test run.</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="fu">mkdir</span> data/RNAseq</span>
 <span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a><span class="bu">cd</span> data/RNAseq</span>
 <span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a><span class="co"># wget https://raw.githubusercontent.com/jianhong/genomictools/master/inst/extdata/Danio_rerio.GRCz11.cdna.toy.fa.gz</span></span>
-<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a><span class="fu">ln</span> <span class="at">-s</span> /usr/local/lib/R/site-library/basicBioinformaticsDRC2023/extdata/Danio_rerio.GRCz11.cdna.toy.fa.gz ./</span></code></pre></div>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a><span class="fu">ln</span> <span class="at">-s</span> /usr/local/lib/R/site-library/basicBioinformaticsDRC2024/extdata/Danio_rerio.GRCz11.cdna.toy.fa.gz ./</span></code></pre></div>
 <p>It will take several seconds to build the toy index.</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="ex">kallisto</span> index <span class="at">-i</span> danRer.GRCz11_transcrits.toy.idx Danio_rerio.GRCz11.cdna.toy.fa.gz</span>
 <span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a></span>
@@ -228,7 +228,7 @@ documentation by retrieve ENSEMBL transcript id to gene id.</p>
 the pre-saved object for the toy data.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># t2g &lt;- readRDS(url("https://raw.githubusercontent.com/jianhong/genomictools/master/inst/extdata/t2g.rds"))</span></span>
-<span><span class="va">t2g</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"t2g.rds"</span>, package <span class="op">=</span> <span class="st">"basicBioinformaticsDRC2023"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">t2g</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"t2g.rds"</span>, package <span class="op">=</span> <span class="st">"basicBioinformaticsDRC2024"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">t2g</span>, n<span class="op">=</span><span class="fl">3</span><span class="op">)</span></span></code></pre></div>
 <p>The following codes are using tximport to import the transcripts
 counts and aggregate to gene level. Downstream are using DESeq2 to do
@@ -325,7 +325,7 @@ Transform to keep memory requirements low for the alignment process.</p>
 <p>The data are only a subset of the whole genome. We will only use
 genes in chromosome 4, 13, 16 and 21 to speed up the test run.</p>
 <div class="sourceCode" id="cb15"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a><span class="co"># wget https://raw.githubusercontent.com/jianhong/genomictools/master/inst/extdata/Danio_rerio.GRCz11.dna.toy.fa.gz</span></span>
-<span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a><span class="fu">ln</span> <span class="at">-s</span> /usr/local/lib/R/site-library/basicBioinformaticsDRC2023/extdata/Danio_rerio.GRCz11.dna.toy.fa.gz ./</span>
+<span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a><span class="fu">ln</span> <span class="at">-s</span> /usr/local/lib/R/site-library/basicBioinformaticsDRC2024/extdata/Danio_rerio.GRCz11.dna.toy.fa.gz ./</span>
 <span id="cb15-3"><a href="#cb15-3" tabindex="-1"></a><span class="co">## the following step will take about 3min</span></span>
 <span id="cb15-4"><a href="#cb15-4" tabindex="-1"></a><span class="ex">bwa</span> index <span class="at">-p</span> GRCz11.toy Danio_rerio.GRCz11.dna.toy.fa.gz</span></code></pre></div>
 </div>
