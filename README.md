@@ -1,7 +1,5 @@
 # DRC2024 basic bioinformatics
 
-![.github/workflows/push_docker.yaml](https://github.com/jianhong/genomictools/workflows/.github/workflows/push_docker.yaml/badge.svg)
-
 [github page](https://jianhong.github.io/genomictools/) |
 [source code](https://github.com/jianhong/genomictools)
 
