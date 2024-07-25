@@ -227,26 +227,6 @@ res.kallisto[!is.na(res.kallisto$padj), ]
 ```
 
 
-### run Sleuth
-
-The following code is showing how to use sleuth to do DE analysis. 
-However, the sleuth package is not updated. It may be broken.
-```{r, eval=FALSE}
-#BiocManager::install("pachterlab/sleuth")
-library(sleuth)
-samples <- dir("kallisto_quant")
-s2c <- data.frame(path=dir("kallisto_quant", full.names = TRUE), 
-                  sample=samples, 
-                  condition=sub(".rep.", "", samples))
-s2c
-so <- sleuth_prep(s2c, ~-1+condition, target_mapping = t2g)
-so <- sleuth_fit(so)
-## which_beta must be in the colname of design table.
-so <- sleuth_wt(so, which_beta = "conditionAblated")
-sleuth_live(so)
-```
-
-
 ## scripts for ChIPseq
 
 ### prepare index file for bwa

@@ -39,9 +39,7 @@ variable instead of plain text to pass along passwords and other secrets in dock
 
 ## pipeline for RNA-seq
 
-The sample RNA-seq data will be analyzed with [kallisto](https://pachterlab.github.io/kallisto/about)
-+ [sleuth](https://pachterlab.github.io/sleuth/about),
-[kallisto](https://pachterlab.github.io/kallisto/about) or [Salmon](https://combine-lab.github.io/salmon/)
+The sample RNA-seq data will be analyzed with [kallisto](https://pachterlab.github.io/kallisto/about) or [Salmon](https://combine-lab.github.io/salmon/)
 + [tximport](https://bioconductor.org/packages/tximport/) + [DESeq2](https://bioconductor.org/packages/DESeq2).
 
 ## pipeline for ChIP-seq
